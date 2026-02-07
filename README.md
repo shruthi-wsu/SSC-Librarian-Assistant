@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-The Librarian Assistant is a comprehensive library management system designed to help librarians efficiently manage common library operations and tasks. This application streamlines the workflow of library staff by providing an intuitive interface for managing books, users, and transactions.
+The Librarian Assistant is a comprehensive **full-stack library management system** designed to help librarians efficiently manage common library operations and tasks. This application consists of a Spring Boot backend API (this repository) and a React frontend (separate repository) that work together to streamline the workflow of library staff by providing an intuitive interface for managing books, users, and transactions.
 
 **Project Timeline**: 15 weeks (from requirements gathering to deployment)
 
@@ -12,11 +12,24 @@ This document combines the project overview with a detailed Quality Assurance Pl
 
 ## About This Project
 
-This project is being developed as part of the **Software Quality** course at **Washington State University (WSU)**. The application aims to create a practical solution for real-world library management challenges by working closely with WSU librarians to understand their daily requirements and pain points.
+This project is being developed as part of the **Software Quality** course at **Washington State University (WSU)**. The application is a **full-stack library management system** that aims to create a practical solution for real-world library management challenges by working closely with WSU librarians to understand their daily requirements and pain points.
 
-## Repositories
-- Backend - This repository handles backend
-- Front end - https://github.com/sanjeevkrishnan02/library-assistant-frontend
+## Project Architecture
+
+This is a **full-stack application** consisting of two main components:
+
+### Backend (This Repository)
+- **Repository**: [library-assistant-backend](https://github.com/shruthi-wsu/SSC-Librarian-Assistant)
+- **Technology**: Java, Spring Boot, PostgreSQL
+- **Purpose**: RESTful API backend handling all business logic, data management, and authentication
+
+### Frontend (Separate Repository)
+- **Repository**: [library-assistant-frontend](https://github.com/sanjeevkrishnan02/library-assistant-frontend)
+- **Technology**: React
+- **Purpose**: User interface for librarians and patrons
+- **Team Role**: Collaborative development with team members as contributors
+
+Both repositories work together to provide a complete, modern library management solution.
 
 ## Team Information
 
@@ -51,7 +64,7 @@ This project is being developed as part of the **Software Quality** course at **
 
 ## Project Overview
 
-The Librarian Assistant supports efficient library operations through automation and intuitive interfaces, reducing manual work and improving accuracy in common library tasks.
+The Librarian Assistant is a **full-stack library management system** that supports efficient library operations through automation and intuitive interfaces. The system consists of a robust Spring Boot backend API (this repository) and a modern React frontend (separate repository), working together to reduce manual work and improve accuracy in common library tasks.
 
 ## Key Features
 
@@ -95,11 +108,22 @@ The Librarian Assistant supports the following core functionalities:
 
 ## Technology Stack
 
-- **Language:** Java
+### Backend (This Repository)
+- **Language:** Java 17
+- **Framework:** Spring Boot
 - **Build Tool:** Gradle
-- **Database:** [To be determined - SQL]
-- **UI Framework:** Web Portal
-- **Version Control:** Git/GitHub3
+- **Database:** PostgreSQL
+- **Security:** Spring Security with JWT Authentication
+- **ORM:** JPA/Hibernate
+- **Testing:** JUnit 5, Mockito
+- **Version Control:** Git/GitHub
+
+### Frontend (Separate Repository)
+- **Framework:** React
+- **Language:** JavaScript/TypeScript
+- **Version Control:** Git/GitHub
+
+This full-stack architecture provides a modern, scalable solution for library management.
 
 ## Book Attributes
 
@@ -559,18 +583,24 @@ Week 15:    Final Regression, Production Deployment & Post-Release Monitoring
 ## Getting Started
 
 ### Prerequisites
-- Java JDK
+
+#### Backend (This Repository)
+- Java JDK 17+
 - Gradle
-- [Database system] TBD
-- Front end - separate repository
+- PostgreSQL
 - Git for version control
 
-### Installation
-```bash
-# Clone the repository
-git clone [repository-url]
+#### Frontend (Separate Repository)
+- Node.js and npm
+- React development environment
+- See [frontend repository](https://github.com/sanjeevkrishnan02/library-assistant-frontend) for detailed setup
 
-# Navigate to project directory
+### Installation
+
+#### Backend Setup (This Repository)
+```bash
+# Clone the backend repository
+git clone https://github.com/shruthi-wsu/SSC-Librarian-Assistant.git
 cd "Librarian Assistant"
 
 # Build the project
@@ -585,6 +615,21 @@ cd "Librarian Assistant"
 # Generate test coverage report
 ./gradlew jacocoTestReport
 ```
+
+#### Frontend Setup (Separate Repository)
+```bash
+# Clone the frontend repository
+git clone https://github.com/sanjeevkrishnan02/library-assistant-frontend.git
+cd library-assistant-frontend
+
+# Install dependencies
+npm install
+
+# Run the development server
+npm start
+```
+
+**Note**: Both backend and frontend need to be running for the complete application to function.
 
 ## Project Structure
 
