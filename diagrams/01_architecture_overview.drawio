@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- Title -->
+    <mxCell id="2" value="Librarian Assistant — High-Level Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="200" y="20" width="760" height="40" as="geometry" />
+    </mxCell>
+    <mxCell id="3" value="Pattern: Client-Server + Layered Architecture (MVC)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=2;" vertex="1" parent="1">
+      <mxGeometry x="200" y="55" width="760" height="25" as="geometry" />
+    </mxCell>
+
+    <!-- ========== CLIENT TIER ========== -->
+    <mxCell id="10" value="«tier»&#xa;CLIENT" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#6666FF;" vertex="1" parent="1">
+      <mxGeometry x="60" y="100" width="100" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="11" value="React SPA&#xa;(library-assistant-frontend)" style="shape=mxgraph.uml.component;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;align=center;" vertex="1" parent="1">
+      <mxGeometry x="60" y="135" width="260" height="80" as="geometry" />
+    </mxCell>
+    <mxCell id="12" value="Pages: LoginPage, RegisterPage,&#xa;BookSearchPage, BookDetailPage,&#xa;DashboardPage" style="text;html=1;strokeColor=none;fillColor=#EEF4FF;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="60" y="220" width="260" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="13" value="Services: authService, bookService,&#xa;checkoutService (Axios/REST)" style="text;html=1;strokeColor=none;fillColor=#EEF4FF;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="60" y="285" width="260" height="50" as="geometry" />
+    </mxCell>
+
+    <!-- REST/JSON Arrow -->
+    <mxCell id="20" value="REST / JSON&#xa;HTTP" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#FF6600;strokeWidth=2;fillColor=#FF6600;fontStyle=1;fontSize=11;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="11" target="31">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="21" value="«interface»&#xa;REST API" style="text;html=1;strokeColor=#FF6600;fillColor=#FFEECC;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="360" y="155" width="100" height="40" as="geometry" />
+    </mxCell>
+
+    <!-- ========== SERVER TIER ========== -->
+    <mxCell id="30" value="«tier»&#xa;SERVER — Spring Boot Backend" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#006600;" vertex="1" parent="1">
+      <mxGeometry x="490" y="100" width="400" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- Presentation Layer -->
+    <mxCell id="31" value="«layer»&#xa;Presentation Layer (Controllers)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+      <mxGeometry x="490" y="135" width="380" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="32" value="UserController | BookController | CheckoutController&#xa;HoldController | ReturnController | ReportController" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="490" y="170" width="380" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- Arrow down -->
+    <mxCell id="33" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#82b366;strokeWidth=1.5;" edge="1" parent="1" source="31" target="34">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Business Logic Layer -->
+    <mxCell id="34" value="«layer»&#xa;Business Logic Layer (Services)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+      <mxGeometry x="490" y="235" width="380" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="35" value="UserService | BookService | CirculationService&#xa;HoldService | FineService | ReportService" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="490" y="270" width="380" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- Arrow down -->
+    <mxCell id="36" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#d6b656;strokeWidth=1.5;" edge="1" parent="1" source="34" target="37">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Data Access Layer -->
+    <mxCell id="37" value="«layer»&#xa;Data Access Layer (JPA Repositories)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;align=center;" vertex="1" parent="1">
+      <mxGeometry x="490" y="330" width="380" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="38" value="UserRepository | BookRepository | TransactionRepository&#xa;HoldRepository | FineRepository" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="490" y="365" width="380" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- Arrow down -->
+    <mxCell id="39" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#b85450;strokeWidth=1.5;" edge="1" parent="1" source="37" target="50">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Security cross-cutting -->
+    <mxCell id="40" value="«cross-cutting»&#xa;Spring Security / JWT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=2;align=center;" vertex="1" parent="1">
+      <mxGeometry x="900" y="185" width="170" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="41" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#9673a6;strokeWidth=1;dashed=1;" edge="1" parent="1" source="40" target="31">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ========== DATA TIER ========== -->
+    <mxCell id="48" value="«tier»&#xa;DATA" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#993300;" vertex="1" parent="1">
+      <mxGeometry x="490" y="415" width="100" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="50" value="«database»&#xa;PostgreSQL / H2 (dev)" style="shape=mxgraph.er.database;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontStyle=1;align=center;" vertex="1" parent="1">
+      <mxGeometry x="600" y="440" width="200" height="70" as="geometry" />
+    </mxCell>
+
+    <!-- Legend -->
+    <mxCell id="60" value="Legend" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+      <mxGeometry x="60" y="400" width="100" height="25" as="geometry" />
+    </mxCell>
+    <mxCell id="61" value="" style="fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+      <mxGeometry x="60" y="430" width="25" height="15" as="geometry" />
+    </mxCell>
+    <mxCell id="62" value="Client Tier" style="text;html=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="90" y="428" width="80" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="63" value="" style="fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+      <mxGeometry x="60" y="455" width="25" height="15" as="geometry" />
+    </mxCell>
+    <mxCell id="64" value="Controller Layer" style="text;html=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="90" y="453" width="100" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="65" value="" style="fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+      <mxGeometry x="60" y="480" width="25" height="15" as="geometry" />
+    </mxCell>
+    <mxCell id="66" value="Service Layer" style="text;html=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="90" y="478" width="80" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="67" value="" style="fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+      <mxGeometry x="60" y="505" width="25" height="15" as="geometry" />
+    </mxCell>
+    <mxCell id="68" value="Repository Layer" style="text;html=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="90" y="503" width="100" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="69" value="" style="fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+      <mxGeometry x="60" y="530" width="25" height="15" as="geometry" />
+    </mxCell>
+    <mxCell id="70" value="Database Tier" style="text;html=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="90" y="528" width="80" height="20" as="geometry" />
+    </mxCell>
+
+    <!-- Traceability note -->
+    <mxCell id="80" value="Traceability:&#xa;FR-1 → UserController + UserService + UserRepository + LoginPage/RegisterPage (FE)&#xa;FR-2 → BookController + BookService + BookRepository + BookSearchPage/BookDetailPage (FE)&#xa;FR-3 → HoldController + HoldService + HoldRepository + BookDetailPage (FE)&#xa;FR-4 → CheckoutController + CirculationService + TransactionRepository + BookDetailPage (FE)&#xa;FR-5 → ReturnController + CirculationService + ReturnRepository + DashboardPage (FE)&#xa;FR-6 → ReportController + ReportService + DashboardPage (FE)" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;fontColor=#333333;" vertex="1" parent="1">
+      <mxGeometry x="60" y="570" width="640" height="120" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>
