@@ -12,6 +12,7 @@ import com.example.librarianassistant.repository.CheckoutRepository;
 import com.example.librarianassistant.repository.FineRepository;
 import com.example.librarianassistant.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CirculationService {
@@ -62,7 +64,10 @@ public class CirculationService {
                 .book(book)
                 .dueDate(LocalDate.now().plusDays(LOAN_PERIOD_DAYS))
                 .build();
-        return toResponse(checkoutRepository.save(checkout));
+        CheckoutResponse response = toResponse(checkoutRepository.save(checkout));
+        log.info("Checkout created: checkoutId={}, userId={}, book='{}', dueDate={}",
+                response.getId(), userId, book.getTitle(), response.getDueDate());
+        return response;
     }
 
     @Transactional
@@ -82,7 +87,8 @@ public class CirculationService {
             long daysOverdue = ChronoUnit.DAYS.between(checkout.getDueDate(), returnDate);
             BigDecimal fineAmount = FINE_PER_DAY.multiply(BigDecimal.valueOf(daysOverdue));
             checkout.setFineAmount(fineAmount);
-
+            log.info("Fine generated: checkoutId={}, daysOverdue={}, amount={}",
+                    checkoutId, daysOverdue, fineAmount);
             Fine fine = Fine.builder()
                     .user(checkout.getUser())
                     .checkout(checkout)
@@ -99,9 +105,9 @@ public class CirculationService {
         bookRepository.save(book);
 
         CheckoutResponse response = toResponse(checkoutRepository.save(checkout));
-
+        log.info("Book returned: checkoutId={}, userId={}, book='{}'",
+                checkoutId, checkout.getUser().getId(), book.getTitle());
         holdService.processNextHold(book.getId());
-
         return response;
     }
 
@@ -119,7 +125,10 @@ public class CirculationService {
 
         checkout.setDueDate(checkout.getDueDate().plusDays(LOAN_PERIOD_DAYS));
         checkout.setRenewalCount(checkout.getRenewalCount() + 1);
-        return toResponse(checkoutRepository.save(checkout));
+        CheckoutResponse response = toResponse(checkoutRepository.save(checkout));
+        log.info("Checkout renewed: checkoutId={}, newDueDate={}, renewalCount={}",
+                checkoutId, response.getDueDate(), response.getRenewalCount());
+        return response;
     }
 
     public List<CheckoutResponse> getUserCheckouts(Long userId) {

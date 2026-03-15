@@ -11,6 +11,7 @@ import com.example.librarianassistant.repository.CheckoutRepository;
 import com.example.librarianassistant.repository.HoldRepository;
 import com.example.librarianassistant.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HoldService {
@@ -56,7 +58,10 @@ public class HoldService {
                 .queuePosition(queuePosition)
                 .build();
 
-        return toResponse(holdRepository.save(hold));
+        HoldResponse response = toResponse(holdRepository.save(hold));
+        log.info("Hold placed: holdId={}, userId={}, book='{}', queuePosition={}",
+                response.getId(), userId, book.getTitle(), queuePosition);
+        return response;
     }
 
     @Transactional
@@ -76,6 +81,7 @@ public class HoldService {
 
         hold.setStatus(Hold.HoldStatus.CANCELLED);
         holdRepository.save(hold);
+        log.info("Hold cancelled: holdId={}, cancelledBy={}", holdId, requestingEmail);
     }
 
     @Transactional(readOnly = true)
@@ -98,6 +104,8 @@ public class HoldService {
                 .ifPresent(hold -> {
                     hold.setStatus(Hold.HoldStatus.NOTIFIED);
                     holdRepository.save(hold);
+                    log.info("Hold notified: holdId={}, bookId={}, userId={}",
+                            hold.getId(), bookId, hold.getUser().getId());
                 });
     }
 
