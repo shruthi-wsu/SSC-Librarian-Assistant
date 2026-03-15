@@ -2,6 +2,8 @@ package com.example.librarianassistant.service;
 
 import com.example.librarianassistant.dto.BookRequest;
 import com.example.librarianassistant.dto.BookResponse;
+import com.example.librarianassistant.exception.BusinessException;
+import com.example.librarianassistant.exception.ResourceNotFoundException;
 import com.example.librarianassistant.model.Book;
 import com.example.librarianassistant.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +42,7 @@ public class BookService {
 
     public BookResponse createBook(BookRequest request) {
         if (bookRepository.findByIsbn(request.getIsbn()).isPresent()) {
-            throw new IllegalArgumentException("ISBN already exists: " + request.getIsbn());
+            throw new BusinessException("ISBN already exists: " + request.getIsbn());
         }
         Book book = Book.builder()
                 .isbn(request.getIsbn())
@@ -73,7 +75,7 @@ public class BookService {
 
     private Book findById(Long id) {
         return bookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Book not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found: " + id));
     }
 
     private BookResponse toResponse(Book book) {
