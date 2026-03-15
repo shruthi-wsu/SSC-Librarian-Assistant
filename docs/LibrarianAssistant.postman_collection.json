@@ -114,13 +114,20 @@
           }
         },
         {
+          "name": "List Available Books",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/books/available", "host": ["{{baseUrl}}"], "path": ["api", "books", "available"] }
+          }
+        },
+        {
           "name": "Create Book (LIBRARIAN)",
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Effective Java\",\n  \"author\": \"Joshua Bloch\",\n  \"isbn\": \"9780134685991\",\n  \"genre\": \"Technology\",\n  \"totalCopies\": 3,\n  \"publishedYear\": 2018\n}"
+              "raw": "{\n  \"isbn\": \"9780134685991\",\n  \"title\": \"Effective Java\",\n  \"author\": \"Joshua Bloch\",\n  \"genre\": \"Technology\",\n  \"publishYear\": 2018,\n  \"totalCopies\": 3,\n  \"availableCopies\": 3,\n  \"location\": \"A-12\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/books", "host": ["{{baseUrl}}"], "path": ["api", "books"] }
           }
@@ -132,7 +139,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Effective Java (3rd Ed)\",\n  \"author\": \"Joshua Bloch\",\n  \"isbn\": \"9780134685991\",\n  \"genre\": \"Technology\",\n  \"totalCopies\": 5,\n  \"publishedYear\": 2018\n}"
+              "raw": "{\n  \"isbn\": \"9780134685991\",\n  \"title\": \"Effective Java (3rd Ed)\",\n  \"author\": \"Joshua Bloch\",\n  \"genre\": \"Technology\",\n  \"publishYear\": 2018,\n  \"totalCopies\": 5,\n  \"availableCopies\": 4,\n  \"location\": \"A-12\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/books/{{bookId}}", "host": ["{{baseUrl}}"], "path": ["api", "books", "{{bookId}}"] }
           }
@@ -142,6 +149,44 @@
           "request": {
             "method": "DELETE",
             "url": { "raw": "{{baseUrl}}/api/books/{{bookId}}", "host": ["{{baseUrl}}"], "path": ["api", "books", "{{bookId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List All Users (LIBRARIAN)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          }
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] }
+          }
+        },
+        {
+          "name": "Get User by ID (LIBRARIAN)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "users", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Update User Status (LIBRARIAN)",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}/status?status=ACTIVE",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}", "status"],
+              "query": [{ "key": "status", "value": "ACTIVE", "description": "ACTIVE, SUSPENDED, or INACTIVE" }]
+            }
           }
         }
       ]
@@ -165,12 +210,15 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"userId\": {{userId}},\n  \"bookId\": {{bookId}}\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/checkouts", "host": ["{{baseUrl}}"], "path": ["api", "checkouts"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/checkouts?userId={{userId}}&bookId={{bookId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "checkouts"],
+              "query": [
+                { "key": "userId", "value": "{{userId}}" },
+                { "key": "bookId", "value": "{{bookId}}" }
+              ]
+            }
           }
         },
         {
@@ -222,12 +270,15 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"userId\": {{userId}},\n  \"bookId\": {{bookId}}\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/holds", "host": ["{{baseUrl}}"], "path": ["api", "holds"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/holds?userId={{userId}}&bookId={{bookId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "holds"],
+              "query": [
+                { "key": "userId", "value": "{{userId}}" },
+                { "key": "bookId", "value": "{{bookId}}" }
+              ]
+            }
           }
         },
         {
@@ -268,13 +319,6 @@
           "request": {
             "method": "GET",
             "url": { "raw": "{{baseUrl}}/api/fines/user/{{userId}}/unpaid", "host": ["{{baseUrl}}"], "path": ["api", "fines", "user", "{{userId}}", "unpaid"] }
-          }
-        },
-        {
-          "name": "Get Total Unpaid",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "{{baseUrl}}/api/fines/user/{{userId}}/total", "host": ["{{baseUrl}}"], "path": ["api", "fines", "user", "{{userId}}", "total"] }
           }
         },
         {
