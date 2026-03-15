@@ -1,6 +1,8 @@
 package com.example.librarianassistant.repository;
 
+import com.example.librarianassistant.dto.PopularBookResponse;
 import com.example.librarianassistant.model.Book;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,5 +32,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
            "FROM Book b LEFT JOIN b.checkouts c " +
            "GROUP BY b.id, b.title, b.author " +
            "ORDER BY COUNT(c.id) DESC")
-    List<com.example.librarianassistant.dto.PopularBookResponse> findTopCheckoutedBooks(org.springframework.data.domain.Pageable pageable);
+    List<PopularBookResponse> findTopCheckoutedBooks(Pageable pageable);
 }
