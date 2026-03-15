@@ -24,4 +24,11 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByAuthorContainingIgnoreCase(String author);
 
     List<Book> findByAvailableCopiesGreaterThan(int copies);
+
+    @Query("SELECT new com.example.librarianassistant.dto.PopularBookResponse(" +
+           "b.id, b.title, b.author, COUNT(c.id)) " +
+           "FROM Book b LEFT JOIN b.checkouts c " +
+           "GROUP BY b.id, b.title, b.author " +
+           "ORDER BY COUNT(c.id) DESC")
+    List<com.example.librarianassistant.dto.PopularBookResponse> findTopCheckoutedBooks(org.springframework.data.domain.Pageable pageable);
 }
