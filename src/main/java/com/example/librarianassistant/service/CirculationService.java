@@ -1,6 +1,8 @@
 package com.example.librarianassistant.service;
 
 import com.example.librarianassistant.dto.CheckoutResponse;
+import com.example.librarianassistant.exception.BusinessException;
+import com.example.librarianassistant.exception.ResourceNotFoundException;
 import com.example.librarianassistant.model.Book;
 import com.example.librarianassistant.model.Checkout;
 import com.example.librarianassistant.model.Fine;
@@ -10,6 +12,7 @@ import com.example.librarianassistant.repository.CheckoutRepository;
 import com.example.librarianassistant.repository.FineRepository;
 import com.example.librarianassistant.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,19 +34,21 @@ public class CirculationService {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
     private final FineRepository fineRepository;
+    @Lazy
+    private final HoldService holdService;
 
     @Transactional
     public CheckoutResponse checkoutBook(Long userId, Long bookId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("Book not found: " + bookId));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found: " + bookId));
 
         if (book.getAvailableCopies() <= 0) {
-            throw new IllegalStateException("No available copies for book: " + bookId);
+            throw new BusinessException("No available copies for book: " + bookId);
         }
         if (checkoutRepository.findByUserIdAndBookIdAndStatus(userId, bookId, Checkout.CheckoutStatus.ACTIVE).isPresent()) {
-            throw new IllegalStateException("User already has this book checked out");
+            throw new BusinessException("User already has this book checked out");
         }
 
         book.setAvailableCopies(book.getAvailableCopies() - 1);
@@ -63,10 +68,10 @@ public class CirculationService {
     @Transactional
     public CheckoutResponse returnBook(Long checkoutId) {
         Checkout checkout = checkoutRepository.findById(checkoutId)
-                .orElseThrow(() -> new IllegalArgumentException("Checkout not found: " + checkoutId));
+                .orElseThrow(() -> new ResourceNotFoundException("Checkout not found: " + checkoutId));
 
         if (checkout.getStatus() == Checkout.CheckoutStatus.RETURNED) {
-            throw new IllegalStateException("Book already returned");
+            throw new BusinessException("Book already returned");
         }
 
         LocalDate returnDate = LocalDate.now();
@@ -93,19 +98,23 @@ public class CirculationService {
         }
         bookRepository.save(book);
 
-        return toResponse(checkoutRepository.save(checkout));
+        CheckoutResponse response = toResponse(checkoutRepository.save(checkout));
+
+        holdService.processNextHold(book.getId());
+
+        return response;
     }
 
     @Transactional
     public CheckoutResponse renewCheckout(Long checkoutId) {
         Checkout checkout = checkoutRepository.findById(checkoutId)
-                .orElseThrow(() -> new IllegalArgumentException("Checkout not found: " + checkoutId));
+                .orElseThrow(() -> new ResourceNotFoundException("Checkout not found: " + checkoutId));
 
         if (checkout.getStatus() != Checkout.CheckoutStatus.ACTIVE) {
-            throw new IllegalStateException("Only active checkouts can be renewed");
+            throw new BusinessException("Only active checkouts can be renewed");
         }
         if (checkout.getRenewalCount() >= MAX_RENEWALS) {
-            throw new IllegalStateException("Maximum renewals (" + MAX_RENEWALS + ") reached");
+            throw new BusinessException("Maximum renewals (" + MAX_RENEWALS + ") reached");
         }
 
         checkout.setDueDate(checkout.getDueDate().plusDays(LOAN_PERIOD_DAYS));
