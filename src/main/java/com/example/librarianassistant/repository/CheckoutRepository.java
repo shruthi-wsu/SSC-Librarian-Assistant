@@ -23,4 +23,10 @@ public interface CheckoutRepository extends JpaRepository<Checkout, Long> {
     List<Checkout> findOverdue(@Param("today") LocalDate today);
 
     long countByUserIdAndStatus(Long userId, Checkout.CheckoutStatus status);
+
+    long countByStatus(Checkout.CheckoutStatus status);
+
+    long countByStatusAndCheckoutDateBetween(Checkout.CheckoutStatus status, LocalDate from, LocalDate to);
+
+    long countByStatusAndReturnDateBetween(Checkout.CheckoutStatus status, LocalDate from, LocalDate to);
 }
