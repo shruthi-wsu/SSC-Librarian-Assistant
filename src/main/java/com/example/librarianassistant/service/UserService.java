@@ -4,6 +4,8 @@ import com.example.librarianassistant.dto.AuthResponse;
 import com.example.librarianassistant.dto.LoginRequest;
 import com.example.librarianassistant.dto.RegisterRequest;
 import com.example.librarianassistant.dto.UserResponse;
+import com.example.librarianassistant.exception.BusinessException;
+import com.example.librarianassistant.exception.ResourceNotFoundException;
 import com.example.librarianassistant.model.User;
 import com.example.librarianassistant.repository.UserRepository;
 import com.example.librarianassistant.security.JwtUtil;
@@ -27,7 +29,7 @@ public class UserService {
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already registered: " + request.getEmail());
+            throw new BusinessException("Email already registered: " + request.getEmail());
         }
         User user = User.builder()
                 .name(request.getName())
@@ -51,7 +53,7 @@ public class UserService {
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
         return AuthResponse.builder()
                 .token(token)
@@ -70,19 +72,19 @@ public class UserService {
 
     public UserResponse getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
         return toResponse(user);
     }
 
     public UserResponse getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
         return toResponse(user);
     }
 
     public UserResponse updateUserStatus(Long id, User.UserStatus status) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
         user.setStatus(status);
         return toResponse(userRepository.save(user));
     }
