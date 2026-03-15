@@ -5,6 +5,7 @@ import com.example.librarianassistant.exception.ResourceNotFoundException;
 import com.example.librarianassistant.model.Fine;
 import com.example.librarianassistant.repository.FineRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FineService {
@@ -39,7 +41,10 @@ public class FineService {
                 .orElseThrow(() -> new ResourceNotFoundException("Fine not found: " + fineId));
         fine.setStatus(Fine.FineStatus.PAID);
         fine.setPaidDate(LocalDate.now());
-        return toResponse(fineRepository.save(fine));
+        FineResponse response = toResponse(fineRepository.save(fine));
+        log.info("Fine paid: fineId={}, userId={}, amount={}",
+                fineId, fine.getUser().getId(), fine.getAmount());
+        return response;
     }
 
     @Transactional
@@ -48,7 +53,10 @@ public class FineService {
                 .orElseThrow(() -> new ResourceNotFoundException("Fine not found: " + fineId));
         fine.setStatus(Fine.FineStatus.WAIVED);
         fine.setPaidDate(LocalDate.now());
-        return toResponse(fineRepository.save(fine));
+        FineResponse response = toResponse(fineRepository.save(fine));
+        log.info("Fine waived: fineId={}, userId={}, amount={}",
+                fineId, fine.getUser().getId(), fine.getAmount());
+        return response;
     }
 
     @Transactional(readOnly = true)
