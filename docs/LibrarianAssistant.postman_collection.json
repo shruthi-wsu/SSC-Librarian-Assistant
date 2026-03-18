@@ -1,0 +1,380 @@
+{
+  "info": {
+    "_postman_id": "la-collection-001",
+    "name": "Librarian Assistant API",
+    "description": "Complete API collection for the Librarian Assistant Spring Boot backend.\n\n**Base URL**: `{{baseUrl}}`  \n**Auth**: Run \"Login\" first to populate `{{token}}`, then all protected requests use `Bearer {{token}}` automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] }
+          }
+        },
+        {
+          "name": "Login (Librarian)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.token) { pm.environment.set('token', json.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"librarian@library.com\",\n  \"password\": \"password\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Login (Patron)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.token) { pm.environment.set('token', json.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"patron@library.com\",\n  \"password\": \"password\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Books",
+      "item": [
+        {
+          "name": "List All Books",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/books", "host": ["{{baseUrl}}"], "path": ["api", "books"] }
+          }
+        },
+        {
+          "name": "Get Book by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/books/{{bookId}}", "host": ["{{baseUrl}}"], "path": ["api", "books", "{{bookId}}"] }
+          }
+        },
+        {
+          "name": "Search Books",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/books/search?query=Java",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "books", "search"],
+              "query": [{ "key": "query", "value": "Java" }]
+            }
+          }
+        },
+        {
+          "name": "List Available Books",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/books/available", "host": ["{{baseUrl}}"], "path": ["api", "books", "available"] }
+          }
+        },
+        {
+          "name": "Create Book (LIBRARIAN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isbn\": \"9780134685991\",\n  \"title\": \"Effective Java\",\n  \"author\": \"Joshua Bloch\",\n  \"genre\": \"Technology\",\n  \"publishYear\": 2018,\n  \"totalCopies\": 3,\n  \"availableCopies\": 3,\n  \"location\": \"A-12\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/books", "host": ["{{baseUrl}}"], "path": ["api", "books"] }
+          }
+        },
+        {
+          "name": "Update Book (LIBRARIAN)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isbn\": \"9780134685991\",\n  \"title\": \"Effective Java (3rd Ed)\",\n  \"author\": \"Joshua Bloch\",\n  \"genre\": \"Technology\",\n  \"publishYear\": 2018,\n  \"totalCopies\": 5,\n  \"availableCopies\": 4,\n  \"location\": \"A-12\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/books/{{bookId}}", "host": ["{{baseUrl}}"], "path": ["api", "books", "{{bookId}}"] }
+          }
+        },
+        {
+          "name": "Delete Book (LIBRARIAN)",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/books/{{bookId}}", "host": ["{{baseUrl}}"], "path": ["api", "books", "{{bookId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List All Users (LIBRARIAN)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          }
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] }
+          }
+        },
+        {
+          "name": "Get User by ID (LIBRARIAN)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "users", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Update User Status (LIBRARIAN)",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}/status?status=ACTIVE",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}", "status"],
+              "query": [{ "key": "status", "value": "ACTIVE", "description": "ACTIVE, SUSPENDED, or INACTIVE" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkouts",
+      "item": [
+        {
+          "name": "Checkout Book (LIBRARIAN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) { pm.environment.set('checkoutId', json.id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/checkouts?userId={{userId}}&bookId={{bookId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "checkouts"],
+              "query": [
+                { "key": "userId", "value": "{{userId}}" },
+                { "key": "bookId", "value": "{{bookId}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User Checkouts",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/checkouts/user/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "checkouts", "user", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Renew Checkout",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/checkouts/{{checkoutId}}/renew", "host": ["{{baseUrl}}"], "path": ["api", "checkouts", "{{checkoutId}}", "renew"] }
+          }
+        },
+        {
+          "name": "Return Book (LIBRARIAN)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/checkouts/{{checkoutId}}/return", "host": ["{{baseUrl}}"], "path": ["api", "checkouts", "{{checkoutId}}", "return"] }
+          }
+        },
+        {
+          "name": "Get Overdue Checkouts (LIBRARIAN)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/checkouts/overdue", "host": ["{{baseUrl}}"], "path": ["api", "checkouts", "overdue"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Holds",
+      "item": [
+        {
+          "name": "Place Hold",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) { pm.environment.set('holdId', json.id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/holds?userId={{userId}}&bookId={{bookId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "holds"],
+              "query": [
+                { "key": "userId", "value": "{{userId}}" },
+                { "key": "bookId", "value": "{{bookId}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User Holds",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/holds/user/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "holds", "user", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Get Holds by Book (LIBRARIAN)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/holds/book/{{bookId}}", "host": ["{{baseUrl}}"], "path": ["api", "holds", "book", "{{bookId}}"] }
+          }
+        },
+        {
+          "name": "Cancel Hold",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/holds/{{holdId}}", "host": ["{{baseUrl}}"], "path": ["api", "holds", "{{holdId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fines",
+      "item": [
+        {
+          "name": "Get User Fines",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/fines/user/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "fines", "user", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Get Unpaid Fines",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/fines/user/{{userId}}/unpaid", "host": ["{{baseUrl}}"], "path": ["api", "fines", "user", "{{userId}}", "unpaid"] }
+          }
+        },
+        {
+          "name": "Pay Fine",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/fines/{{fineId}}/pay", "host": ["{{baseUrl}}"], "path": ["api", "fines", "{{fineId}}", "pay"] }
+          }
+        },
+        {
+          "name": "Waive Fine (LIBRARIAN)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/fines/{{fineId}}/waive", "host": ["{{baseUrl}}"], "path": ["api", "fines", "{{fineId}}", "waive"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports (LIBRARIAN only)",
+      "item": [
+        {
+          "name": "Circulation Report",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/circulation?from=2026-01-01&to=2026-12-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "circulation"],
+              "query": [
+                { "key": "from", "value": "2026-01-01" },
+                { "key": "to", "value": "2026-12-31" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Overdue Items Report",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/reports/overdue", "host": ["{{baseUrl}}"], "path": ["api", "reports", "overdue"] }
+          }
+        },
+        {
+          "name": "Popular Books Report",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/popular-books?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "popular-books"],
+              "query": [{ "key": "limit", "value": "10" }]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
