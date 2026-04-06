@@ -7,11 +7,13 @@ import com.example.librarianassistant.exception.ResourceNotFoundException;
 import com.example.librarianassistant.model.Book;
 import com.example.librarianassistant.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookService {
@@ -42,6 +44,7 @@ public class BookService {
 
     public BookResponse createBook(BookRequest request) {
         if (bookRepository.findByIsbn(request.getIsbn()).isPresent()) {
+            log.warn("Attempt to create book with duplicate ISBN: {}", request.getIsbn());
             throw new BusinessException("ISBN already exists: " + request.getIsbn());
         }
         Book book = Book.builder()
@@ -54,7 +57,9 @@ public class BookService {
                 .availableCopies(request.getAvailableCopies())
                 .location(request.getLocation())
                 .build();
-        return toResponse(bookRepository.save(book));
+        BookResponse saved = toResponse(bookRepository.save(book));
+        log.info("Book created: id={}, isbn={}, title={}", saved.getId(), saved.getIsbn(), saved.getTitle());
+        return saved;
     }
 
     public BookResponse updateBook(Long id, BookRequest request) {
@@ -66,11 +71,14 @@ public class BookService {
         book.setTotalCopies(request.getTotalCopies());
         book.setAvailableCopies(request.getAvailableCopies());
         book.setLocation(request.getLocation());
-        return toResponse(bookRepository.save(book));
+        BookResponse updated = toResponse(bookRepository.save(book));
+        log.info("Book updated: id={}, title={}", id, updated.getTitle());
+        return updated;
     }
 
     public void deleteBook(Long id) {
         bookRepository.delete(findById(id));
+        log.info("Book deleted: id={}", id);
     }
 
     private Book findById(Long id) {

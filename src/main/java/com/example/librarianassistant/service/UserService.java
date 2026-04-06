@@ -10,6 +10,7 @@ import com.example.librarianassistant.model.User;
 import com.example.librarianassistant.repository.UserRepository;
 import com.example.librarianassistant.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -29,6 +31,7 @@ public class UserService {
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
+            log.warn("Registration attempt with duplicate email: {}", request.getEmail());
             throw new BusinessException("Email already registered: " + request.getEmail());
         }
         User user = User.builder()
@@ -38,6 +41,7 @@ public class UserService {
                 .role(request.getRole() != null ? request.getRole() : User.Role.PATRON)
                 .build();
         user = userRepository.save(user);
+        log.info("User registered: id={}, email={}, role={}", user.getId(), user.getEmail(), user.getRole());
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
         return AuthResponse.builder()
                 .token(token)

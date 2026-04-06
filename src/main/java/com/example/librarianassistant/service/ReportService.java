@@ -7,6 +7,7 @@ import com.example.librarianassistant.model.Checkout;
 import com.example.librarianassistant.repository.BookRepository;
 import com.example.librarianassistant.repository.CheckoutRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReportService {
@@ -26,6 +28,7 @@ public class ReportService {
     private final BookRepository bookRepository;
 
     public CirculationReportResponse getCirculationStats(LocalDate from, LocalDate to) {
+        log.info("Generating circulation report from={} to={}", from, to);
         long totalCheckouts = checkoutRepository.countByStatusAndCheckoutDateBetween(
                 Checkout.CheckoutStatus.ACTIVE, from, to)
                 + checkoutRepository.countByStatusAndCheckoutDateBetween(
