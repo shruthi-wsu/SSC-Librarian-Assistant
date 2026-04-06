@@ -20,7 +20,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.example.librarianassistant.model.Checkout;
+import com.example.librarianassistant.repository.CheckoutRepository;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,7 +47,11 @@ class CheckoutIntegrationTest {
     @Autowired
     private FineRepository fineRepository;
 
+    @Autowired
+    private CheckoutRepository checkoutRepository;
+
     private MockMvc mockMvc;
+    private String librarianToken;
     private String patronToken;
     private Long patronId;
     private Long bookId;
@@ -54,6 +62,13 @@ class CheckoutIntegrationTest {
                 .webAppContextSetup(context)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
+
+        RegisterRequest libReg = new RegisterRequest();
+        libReg.setName("Checkout Librarian");
+        libReg.setEmail("checkoutlib@test.com");
+        libReg.setPassword("password123");
+        libReg.setRole(User.Role.LIBRARIAN);
+        librarianToken = userService.register(libReg).getToken();
 
         RegisterRequest reg = new RegisterRequest();
         reg.setName("Checkout Patron");
@@ -99,6 +114,53 @@ class CheckoutIntegrationTest {
         // Book availability restored
         Book updated = bookRepository.findById(bookId).orElseThrow();
         assertThat(updated.getAvailableCopies()).isEqualTo(1);
+    }
+
+    @Test
+    void renewCheckout_withinLimit_extendsDueDate() throws Exception {
+        // Checkout
+        MvcResult checkoutResult = mockMvc.perform(post("/api/checkouts")
+                        .header("Authorization", "Bearer " + patronToken)
+                        .param("userId", patronId.toString())
+                        .param("bookId", bookId.toString())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long checkoutId = objectMapper.readTree(checkoutResult.getResponse().getContentAsString()).get("id").asLong();
+
+        // Renew
+        mockMvc.perform(post("/api/checkouts/" + checkoutId + "/renew")
+                        .header("Authorization", "Bearer " + patronToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.renewalCount").value(1))
+                .andExpect(jsonPath("$.status").value("ACTIVE"));
+    }
+
+    @Test
+    void getOverdueCheckouts_asLibrarian_returns200() throws Exception {
+        // Create a checkout and backdate dueDate to make it overdue
+        MvcResult checkoutResult = mockMvc.perform(post("/api/checkouts")
+                        .header("Authorization", "Bearer " + patronToken)
+                        .param("userId", patronId.toString())
+                        .param("bookId", bookId.toString())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long checkoutId = objectMapper.readTree(checkoutResult.getResponse().getContentAsString()).get("id").asLong();
+
+        // Backdate the dueDate
+        Checkout checkout = checkoutRepository.findById(checkoutId).orElseThrow();
+        checkout.setDueDate(java.time.LocalDate.now().minusDays(5));
+        checkoutRepository.save(checkout);
+
+        // Librarian retrieves overdue checkouts
+        mockMvc.perform(get("/api/checkouts/overdue")
+                        .header("Authorization", "Bearer " + librarianToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(checkoutId));
     }
 
     @Test
