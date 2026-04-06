@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BookController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">LibrarianAssistant</a> &gt; <a href="index.source.html" class="el_package">com.example.librarianassistant.controller</a> &gt; <span class="el_source">BookController.java</span></div><h1>BookController.java</h1><pre class="source lang-java linenums">package com.example.librarianassistant.controller;
+
+import com.example.librarianassistant.dto.BookRequest;
+import com.example.librarianassistant.dto.BookResponse;
+import com.example.librarianassistant.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@Tag(name = &quot;Books&quot;, description = &quot;Book catalog – read access for all authenticated users; write access requires LIBRARIAN role&quot;)
+@RestController
+@RequestMapping(&quot;/api/books&quot;)
+@RequiredArgsConstructor
+public class BookController {
+
+    private final BookService bookService;
+
+    @Operation(summary = &quot;List all books&quot;, description = &quot;Returns every book in the catalog regardless of availability.&quot;)
+    @ApiResponses({
+            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Successful retrieval&quot;,
+                    content = @Content(schema = @Schema(implementation = BookResponse.class))),
+            @ApiResponse(responseCode = &quot;401&quot;, description = &quot;Missing or invalid JWT token&quot;, content = @Content)
+    })
+    @GetMapping
+    public ResponseEntity&lt;List&lt;BookResponse&gt;&gt; getAllBooks() {
+<span class="fc" id="L46">        return ResponseEntity.ok(bookService.getAllBooks());</span>
+    }
+
+    @Operation(summary = &quot;Get a book by ID&quot;)
+    @ApiResponses({
+            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Book found&quot;,
+                    content = @Content(schema = @Schema(implementation = BookResponse.class))),
+            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Book not found&quot;, content = @Content),
+            @ApiResponse(responseCode = &quot;401&quot;, description = &quot;Missing or invalid JWT token&quot;, content = @Content)
+    })
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;BookResponse&gt; getBookById(
+            @Parameter(description = &quot;Book ID&quot;, example = &quot;1&quot;) @PathVariable Long id) {
+<span class="fc" id="L59">        return ResponseEntity.ok(bookService.getBookById(id));</span>
+    }
+
+    @Operation(summary = &quot;Search books by title, author, or ISBN&quot;,
+               description = &quot;Case-insensitive partial match against title, author, and ISBN fields.&quot;)
+    @ApiResponses({
+            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Search results (may be empty)&quot;,
+                    content = @Content(schema = @Schema(implementation = BookResponse.class))),
+            @ApiResponse(responseCode = &quot;401&quot;, description = &quot;Missing or invalid JWT token&quot;, content = @Content)
+    })
+    @GetMapping(&quot;/search&quot;)
+    public ResponseEntity&lt;List&lt;BookResponse&gt;&gt; searchBooks(
+            @Parameter(description = &quot;Search term&quot;, example = &quot;Tolkien&quot;) @RequestParam String query) {
+<span class="fc" id="L72">        return ResponseEntity.ok(bookService.searchBooks(query));</span>
+    }
+
+    @Operation(summary = &quot;List available books&quot;, description = &quot;Returns only books with at least one available copy.&quot;)
+    @ApiResponses({
+            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Available books&quot;,
+                    content = @Content(schema = @Schema(implementation = BookResponse.class))),
+            @ApiResponse(responseCode = &quot;401&quot;, description = &quot;Missing or invalid JWT token&quot;, content = @Content)
+    })
+    @GetMapping(&quot;/available&quot;)
+    public ResponseEntity&lt;List&lt;BookResponse&gt;&gt; getAvailableBooks() {
+<span class="nc" id="L83">        return ResponseEntity.ok(bookService.getAvailableBooks());</span>
+    }
+
+    @Operation(summary = &quot;Add a new book&quot;, description = &quot;**Requires LIBRARIAN role.** Creates a new book record in the catalog.&quot;)
+    @ApiResponses({
+            @ApiResponse(responseCode = &quot;201&quot;, description = &quot;Book created&quot;,
+                    content = @Content(schema = @Schema(implementation = BookResponse.class))),
+            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Validation error or duplicate ISBN&quot;, content = @Content),
+            @ApiResponse(responseCode = &quot;401&quot;, description = &quot;Missing or invalid JWT token&quot;, content = @Content),
+            @ApiResponse(responseCode = &quot;403&quot;, description = &quot;Insufficient role (LIBRARIAN required)&quot;, content = @Content)
+    })
+    @PostMapping
+    @PreAuthorize(&quot;hasRole('LIBRARIAN')&quot;)
+    public ResponseEntity&lt;BookResponse&gt; createBook(@Valid @RequestBody BookRequest request) {
+<span class="fc" id="L97">        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(request));</span>
+    }
+
+    @Operation(summary = &quot;Update a book&quot;, description = &quot;**Requires LIBRARIAN role.** Replaces all fields of the specified book.&quot;)
+    @ApiResponses({
+            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Book updated&quot;,
+                    content = @Content(schema = @Schema(implementation = BookResponse.class))),
+            @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Validation error&quot;, content = @Content),
+            @ApiResponse(responseCode = &quot;401&quot;, description = &quot;Missing or invalid JWT token&quot;, content = @Content),
+            @ApiResponse(responseCode = &quot;403&quot;, description = &quot;Insufficient role (LIBRARIAN required)&quot;, content = @Content),
+            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Book not found&quot;, content = @Content)
+    })
+    @PutMapping(&quot;/{id}&quot;)
+    @PreAuthorize(&quot;hasRole('LIBRARIAN')&quot;)
+    public ResponseEntity&lt;BookResponse&gt; updateBook(
+            @Parameter(description = &quot;Book ID&quot;, example = &quot;1&quot;) @PathVariable Long id,
+            @Valid @RequestBody BookRequest request) {
+<span class="fc" id="L114">        return ResponseEntity.ok(bookService.updateBook(id, request));</span>
+    }
+
+    @Operation(summary = &quot;Delete a book&quot;, description = &quot;**Requires LIBRARIAN role.** Permanently removes the book from the catalog.&quot;)
+    @ApiResponses({
+            @ApiResponse(responseCode = &quot;204&quot;, description = &quot;Book deleted&quot;),
+            @ApiResponse(responseCode = &quot;401&quot;, description = &quot;Missing or invalid JWT token&quot;, content = @Content),
+            @ApiResponse(responseCode = &quot;403&quot;, description = &quot;Insufficient role (LIBRARIAN required)&quot;, content = @Content),
+            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Book not found&quot;, content = @Content)
+    })
+    @DeleteMapping(&quot;/{id}&quot;)
+    @PreAuthorize(&quot;hasRole('LIBRARIAN')&quot;)
+    public ResponseEntity&lt;Void&gt; deleteBook(
+            @Parameter(description = &quot;Book ID&quot;, example = &quot;1&quot;) @PathVariable Long id) {
+<span class="fc" id="L128">        bookService.deleteBook(id);</span>
+<span class="fc" id="L129">        return ResponseEntity.noContent().build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

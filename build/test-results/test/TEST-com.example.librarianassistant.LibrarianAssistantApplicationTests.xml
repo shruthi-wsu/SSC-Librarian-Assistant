@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.librarianassistant.LibrarianAssistantApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-04-06T02:15:05.295Z" hostname="mahesh-HP-15-cb0xx" time="0.005">
+  <properties/>
+  <testcase name="contextLoads()" classname="com.example.librarianassistant.LibrarianAssistantApplicationTests" time="0.005"/>
+  <system-out><![CDATA[2026-04-05 19:15:05.269 [Test worker] [no-corr-id] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.example.librarianassistant.LibrarianAssistantApplicationTests]: LibrarianAssistantApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-04-05 19:15:05.289 [Test worker] [no-corr-id] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.example.librarianassistant.LibrarianAssistantApplication for test class com.example.librarianassistant.LibrarianAssistantApplicationTests
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

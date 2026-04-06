@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataSeeder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">LibrarianAssistant</a> &gt; <a href="index.source.html" class="el_package">com.example.librarianassistant.config</a> &gt; <span class="el_source">DataSeeder.java</span></div><h1>DataSeeder.java</h1><pre class="source lang-java linenums">package com.example.librarianassistant.config;
+
+import com.example.librarianassistant.model.Book;
+import com.example.librarianassistant.model.User;
+import com.example.librarianassistant.repository.BookRepository;
+import com.example.librarianassistant.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
+
+@Configuration
+@RequiredArgsConstructor
+public class DataSeeder {
+
+    private final BookRepository bookRepository;
+    private final UserRepository userRepository;
+
+    @Bean
+    CommandLineRunner seedData(PasswordEncoder passwordEncoder) {
+<span class="fc" id="L24">        return args -&gt; {</span>
+<span class="pc bpc" id="L25" title="1 of 2 branches missed.">            if (userRepository.count() == 0) {</span>
+<span class="fc" id="L26">                userRepository.saveAll(List.of(</span>
+<span class="fc" id="L27">                        User.builder()</span>
+<span class="fc" id="L28">                                .name(&quot;Admin Librarian&quot;)</span>
+<span class="fc" id="L29">                                .email(&quot;admin@library.com&quot;)</span>
+<span class="fc" id="L30">                                .password(passwordEncoder.encode(&quot;admin123&quot;))</span>
+<span class="fc" id="L31">                                .role(User.Role.LIBRARIAN)</span>
+<span class="fc" id="L32">                                .build(),</span>
+<span class="fc" id="L33">                        User.builder()</span>
+<span class="fc" id="L34">                                .name(&quot;Jane Patron&quot;)</span>
+<span class="fc" id="L35">                                .email(&quot;jane@library.com&quot;)</span>
+<span class="fc" id="L36">                                .password(passwordEncoder.encode(&quot;patron123&quot;))</span>
+<span class="fc" id="L37">                                .role(User.Role.PATRON)</span>
+<span class="fc" id="L38">                                .build()</span>
+                ));
+            }
+
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">            if (bookRepository.count() == 0) {</span>
+<span class="fc" id="L43">                bookRepository.saveAll(List.of(</span>
+<span class="fc" id="L44">                        Book.builder().isbn(&quot;978-0-06-112008-4&quot;).title(&quot;To Kill a Mockingbird&quot;)</span>
+<span class="fc" id="L45">                                .author(&quot;Harper Lee&quot;).genre(&quot;Fiction&quot;).publishYear(1960)</span>
+<span class="fc" id="L46">                                .totalCopies(3).availableCopies(3).location(&quot;A1&quot;).build(),</span>
+<span class="fc" id="L47">                        Book.builder().isbn(&quot;978-0-7432-7356-5&quot;).title(&quot;1984&quot;)</span>
+<span class="fc" id="L48">                                .author(&quot;George Orwell&quot;).genre(&quot;Dystopian&quot;).publishYear(1949)</span>
+<span class="fc" id="L49">                                .totalCopies(2).availableCopies(2).location(&quot;A2&quot;).build(),</span>
+<span class="fc" id="L50">                        Book.builder().isbn(&quot;978-0-7432-7357-2&quot;).title(&quot;The Great Gatsby&quot;)</span>
+<span class="fc" id="L51">                                .author(&quot;F. Scott Fitzgerald&quot;).genre(&quot;Fiction&quot;).publishYear(1925)</span>
+<span class="fc" id="L52">                                .totalCopies(2).availableCopies(2).location(&quot;B1&quot;).build(),</span>
+<span class="fc" id="L53">                        Book.builder().isbn(&quot;978-0-316-76948-0&quot;).title(&quot;The Catcher in the Rye&quot;)</span>
+<span class="fc" id="L54">                                .author(&quot;J.D. Salinger&quot;).genre(&quot;Fiction&quot;).publishYear(1951)</span>
+<span class="fc" id="L55">                                .totalCopies(1).availableCopies(1).location(&quot;B2&quot;).build(),</span>
+<span class="fc" id="L56">                        Book.builder().isbn(&quot;978-0-06-093546-9&quot;).title(&quot;To Kill a Mockingbird 2nd Ed&quot;)</span>
+<span class="fc" id="L57">                                .author(&quot;Harper Lee&quot;).genre(&quot;Fiction&quot;).publishYear(1988)</span>
+<span class="fc" id="L58">                                .totalCopies(1).availableCopies(1).location(&quot;A1&quot;).build()</span>
+                ));
+            }
+<span class="fc" id="L61">        };</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
