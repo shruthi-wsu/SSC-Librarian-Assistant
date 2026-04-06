@@ -1,5 +1,6 @@
 package com.example.librarianassistant.config;
 
+import com.example.librarianassistant.filter.CorrelationIdFilter;
 import com.example.librarianassistant.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final CorrelationIdFilter correlationIdFilter;
     private final UserDetailsService userDetailsService;
 
     @Bean
@@ -66,6 +68,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
+                .addFilterBefore(correlationIdFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
