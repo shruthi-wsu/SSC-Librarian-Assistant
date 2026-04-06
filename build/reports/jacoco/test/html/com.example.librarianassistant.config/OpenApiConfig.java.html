@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OpenApiConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">LibrarianAssistant</a> &gt; <a href="index.source.html" class="el_package">com.example.librarianassistant.config</a> &gt; <span class="el_source">OpenApiConfig.java</span></div><h1>OpenApiConfig.java</h1><pre class="source lang-java linenums">package com.example.librarianassistant.config;
+
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+<span class="fc" id="L14">public class OpenApiConfig {</span>
+
+    private static final String BEARER_SCHEME = &quot;Bearer Authentication&quot;;
+
+    @Bean
+    public OpenAPI libraryOpenAPI() {
+<span class="fc" id="L20">        return new OpenAPI()</span>
+<span class="fc" id="L21">                .info(new Info()</span>
+<span class="fc" id="L22">                        .title(&quot;Librarian Assistant API&quot;)</span>
+<span class="fc" id="L23">                        .description(&quot;&quot;&quot;</span>
+                                REST API for the **Librarian Assistant** library management system.
+
+                                ## Authentication
+                                Most endpoints require a JWT Bearer token. Use `POST /api/auth/login` \
+                                to obtain a token, then click **Authorize** and enter `Bearer &lt;token&gt;`.
+
+                                ## Roles
+                                - **LIBRARIAN** – full access (CRUD on books, user management, overdue reports)
+                                - **PATRON** – read access to books, own checkouts and holds
+                                &quot;&quot;&quot;)
+<span class="fc" id="L34">                        .version(&quot;1.0.0&quot;)</span>
+<span class="fc" id="L35">                        .contact(new Contact()</span>
+<span class="fc" id="L36">                                .name(&quot;Librarian Assistant Team&quot;)</span>
+<span class="fc" id="L37">                                .email(&quot;team@library.wsu.edu&quot;))</span>
+<span class="fc" id="L38">                        .license(new License()</span>
+<span class="fc" id="L39">                                .name(&quot;MIT License&quot;)))</span>
+<span class="fc" id="L40">                .addSecurityItem(new SecurityRequirement().addList(BEARER_SCHEME))</span>
+<span class="fc" id="L41">                .components(new Components()</span>
+<span class="fc" id="L42">                        .addSecuritySchemes(BEARER_SCHEME,</span>
+                                new SecurityScheme()
+<span class="fc" id="L44">                                        .name(BEARER_SCHEME)</span>
+<span class="fc" id="L45">                                        .description(&quot;Provide the JWT token obtained from POST /api/auth/login&quot;)</span>
+<span class="fc" id="L46">                                        .type(SecurityScheme.Type.HTTP)</span>
+<span class="fc" id="L47">                                        .scheme(&quot;bearer&quot;)</span>
+<span class="fc" id="L48">                                        .bearerFormat(&quot;JWT&quot;)));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

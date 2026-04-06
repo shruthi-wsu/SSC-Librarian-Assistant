@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.librarianassistant.integration.FineIntegrationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-04-06T02:15:10.824Z" hostname="mahesh-HP-15-cb0xx" time="6.439">
+  <properties/>
+  <testcase name="waiveFine_asPatron_returns403()" classname="com.example.librarianassistant.integration.FineIntegrationTest" time="1.312"/>
+  <testcase name="waiveFine_asLibrarian_marksAsWaived()" classname="com.example.librarianassistant.integration.FineIntegrationTest" time="1.218"/>
+  <testcase name="payFine_marksAsPaid()" classname="com.example.librarianassistant.integration.FineIntegrationTest" time="1.346"/>
+  <testcase name="getUnpaidFines_returnsUnpaidOnly()" classname="com.example.librarianassistant.integration.FineIntegrationTest" time="1.258"/>
+  <testcase name="getUserFines_returnsFineList()" classname="com.example.librarianassistant.integration.FineIntegrationTest" time="1.3"/>
+  <system-out><![CDATA[2026-04-05 19:15:10.820 [Test worker] [no-corr-id] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.example.librarianassistant.integration.FineIntegrationTest]: FineIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-04-05 19:15:10.821 [Test worker] [no-corr-id] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.example.librarianassistant.LibrarianAssistantApplication for test class com.example.librarianassistant.integration.FineIntegrationTest
+2026-04-05 19:15:10.829 [Test worker] [no-corr-id] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 19:15:10.829 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists books cascade 
+2026-04-05 19:15:10.830 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists checkouts cascade 
+2026-04-05 19:15:10.831 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists fines cascade 
+2026-04-05 19:15:10.832 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists holds cascade 
+2026-04-05 19:15:10.832 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists users cascade 
+2026-04-05 19:15:10.833 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-29 - Shutdown initiated...
+2026-04-05 19:15:10.835 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-29 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.1)
+
+2026-04-05 19:15:10.868 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - Starting FineIntegrationTest using Java 21.0.10 with PID 482198 (started by mahesh in /media/drive/M@hii/WSU/Shruthi/Sem3/Software Quality/Project/Librarian Assistant)
+2026-04-05 19:15:10.868 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - No active profile set, falling back to 1 default profile: "default"
+2026-04-05 19:15:11.049 [Test worker] [no-corr-id] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-05 19:15:11.071 [Test worker] [no-corr-id] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 20 ms. Found 5 JPA repository interfaces.
+2026-04-05 19:15:11.183 [Test worker] [no-corr-id] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-05 19:15:11.215 [Test worker] [no-corr-id] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-05 19:15:11.216 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-30 - Starting...
+2026-04-05 19:15:11.218 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-30 - Added connection conn290: url=jdbc:h2:mem:testdb user=SA
+2026-04-05 19:15:11.220 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-30 - Start completed.
+2026-04-05 19:15:11.220 [Test worker] [no-corr-id] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-05 19:15:11.221 [Test worker] [no-corr-id] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:testdb]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: TESTDB/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-05 19:15:11.290 [Test worker] [no-corr-id] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-05 19:15:11.292 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists books cascade 
+2026-04-05 19:15:11.293 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists checkouts cascade 
+2026-04-05 19:15:11.293 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists fines cascade 
+2026-04-05 19:15:11.294 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists holds cascade 
+2026-04-05 19:15:11.295 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists users cascade 
+2026-04-05 19:15:11.295 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table books (available_copies integer not null, publish_year integer, total_copies integer not null, id bigint generated by default as identity, author varchar(255) not null, genre varchar(255), isbn varchar(255) not null unique, location varchar(255), title varchar(255) not null, status enum ('AVAILABLE','CHECKED_OUT','DAMAGED','LOST') not null, primary key (id))
+2026-04-05 19:15:11.297 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table checkouts (checkout_date date not null, due_date date not null, fine_amount numeric(38,2), renewal_count integer, return_date date, book_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('ACTIVE','OVERDUE','RETURNED') not null, primary key (id))
+2026-04-05 19:15:11.298 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table fines (amount numeric(38,2) not null, issued_date date not null, paid_date date, checkout_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('PAID','UNPAID','WAIVED') not null, primary key (id))
+2026-04-05 19:15:11.299 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table holds (expiration_date date, hold_date date not null, queue_position integer, book_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('CANCELLED','EXPIRED','FULFILLED','NOTIFIED','PENDING') not null, primary key (id))
+2026-04-05 19:15:11.301 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table users (registration_date date not null, id bigint generated by default as identity, email varchar(255) not null unique, name varchar(255) not null, password varchar(255) not null, role enum ('LIBRARIAN','PATRON') not null, status enum ('ACTIVE','SUSPENDED') not null, primary key (id))
+2026-04-05 19:15:11.302 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists checkouts add constraint FKgghse2fv6dx5inv4wi6dlp8jm foreign key (book_id) references books
+2026-04-05 19:15:11.304 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists checkouts add constraint FK4cffsff8atevplv45x3yagq34 foreign key (user_id) references users
+2026-04-05 19:15:11.306 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists fines add constraint FKaj3kkisa8d4hljsoyb7wxiul8 foreign key (checkout_id) references checkouts
+2026-04-05 19:15:11.308 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists fines add constraint FK96m5dw0wvbckhnnwfeynue15y foreign key (user_id) references users
+2026-04-05 19:15:11.310 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists holds add constraint FK321kkcta1yomy1hfrjyaa24hc foreign key (book_id) references books
+2026-04-05 19:15:11.311 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists holds add constraint FKrt8nfa31bpg91m6nshkw6stj1 foreign key (user_id) references users
+2026-04-05 19:15:11.313 [Test worker] [no-corr-id] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 19:15:11.378 [Test worker] [no-corr-id] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-04-05 19:15:11.439 [Test worker] [no-corr-id] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-05 19:15:11.651 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - Started FineIntegrationTest in 0.815 seconds (process running for 63.514)
+2026-04-05 19:15:11.654 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select count(*) from users u1_0
+2026-04-05 19:15:11.830 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:11.832 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:11.835 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select count(*) from books b1_0
+2026-04-05 19:15:11.838 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:11.840 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:11.841 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:11.842 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:11.843 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:11.847 [Test worker] [no-corr-id] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-04-05 19:15:11.851 [Test worker] [no-corr-id] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-04-05 19:15:11.852 [Test worker] [no-corr-id] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-04-05 19:15:11.854 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select u1_0.id from users u1_0 where u1_0.email=? fetch first ? rows only
+2026-04-05 19:15:11.939 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:11.941 [Test worker] [no-corr-id] INFO  c.e.l.service.UserService - User registered: id=3, email=finelib@test.com, role=LIBRARIAN
+2026-04-05 19:15:11.945 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select u1_0.id from users u1_0 where u1_0.email=? fetch first ? rows only
+2026-04-05 19:15:12.037 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:12.039 [Test worker] [no-corr-id] INFO  c.e.l.service.UserService - User registered: id=4, email=finepat@test.com, role=PATRON
+2026-04-05 19:15:12.041 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:12.049 [Test worker] [4a484c5f-d513-42bd-bf14-d3dceb15063c] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:12.054 [Test worker] [4a484c5f-d513-42bd-bf14-d3dceb15063c] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:12.057 [Test worker] [4a484c5f-d513-42bd-bf14-d3dceb15063c] DEBUG org.hibernate.SQL - select b1_0.id,b1_0.author,b1_0.available_copies,b1_0.genre,b1_0.isbn,b1_0.location,b1_0.publish_year,b1_0.status,b1_0.title,b1_0.total_copies from books b1_0 where b1_0.id=?
+2026-04-05 19:15:12.062 [Test worker] [4a484c5f-d513-42bd-bf14-d3dceb15063c] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.user_id=? and c1_0.book_id=? and c1_0.status=?
+2026-04-05 19:15:12.065 [Test worker] [4a484c5f-d513-42bd-bf14-d3dceb15063c] DEBUG org.hibernate.SQL - insert into checkouts (book_id,checkout_date,due_date,fine_amount,renewal_count,return_date,status,user_id,id) values (?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:12.067 [Test worker] [4a484c5f-d513-42bd-bf14-d3dceb15063c] INFO  c.e.l.service.CirculationService - Checkout created: checkoutId=1, userId=4, book='Fine Test Book', dueDate=2026-04-19
+2026-04-05 19:15:12.068 [Test worker] [4a484c5f-d513-42bd-bf14-d3dceb15063c] DEBUG org.hibernate.SQL - update books set author=?,available_copies=?,genre=?,isbn=?,location=?,publish_year=?,status=?,title=?,total_copies=? where id=?
+2026-04-05 19:15:12.081 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:12.083 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:12.086 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - update checkouts set book_id=?,checkout_date=?,due_date=?,fine_amount=?,renewal_count=?,return_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:12.090 [Test worker] [01e397a3-28f2-4348-bf95-80f075c55a63] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:12.093 [Test worker] [01e397a3-28f2-4348-bf95-80f075c55a63] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:12.094 [Test worker] [01e397a3-28f2-4348-bf95-80f075c55a63] INFO  c.e.l.service.CirculationService - Fine generated: checkoutId=1, daysOverdue=10, amount=2.50
+2026-04-05 19:15:12.096 [Test worker] [01e397a3-28f2-4348-bf95-80f075c55a63] DEBUG org.hibernate.SQL - insert into fines (amount,checkout_id,issued_date,paid_date,status,user_id,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:12.099 [Test worker] [01e397a3-28f2-4348-bf95-80f075c55a63] DEBUG org.hibernate.SQL - select b1_0.id,b1_0.author,b1_0.available_copies,b1_0.genre,b1_0.isbn,b1_0.location,b1_0.publish_year,b1_0.status,b1_0.title,b1_0.total_copies from books b1_0 where b1_0.id=?
+2026-04-05 19:15:12.100 [Test worker] [01e397a3-28f2-4348-bf95-80f075c55a63] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:12.101 [Test worker] [01e397a3-28f2-4348-bf95-80f075c55a63] INFO  c.e.l.service.CirculationService - Book returned: checkoutId=1, userId=4, book='Fine Test Book'
+2026-04-05 19:15:12.105 [Test worker] [01e397a3-28f2-4348-bf95-80f075c55a63] DEBUG org.hibernate.SQL - select h1_0.id,h1_0.book_id,h1_0.expiration_date,h1_0.hold_date,h1_0.queue_position,h1_0.status,h1_0.user_id from holds h1_0 where h1_0.book_id=? and h1_0.status=? order by h1_0.hold_date fetch first ? rows only
+2026-04-05 19:15:12.107 [Test worker] [01e397a3-28f2-4348-bf95-80f075c55a63] DEBUG org.hibernate.SQL - update checkouts set book_id=?,checkout_date=?,due_date=?,fine_amount=?,renewal_count=?,return_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:12.108 [Test worker] [01e397a3-28f2-4348-bf95-80f075c55a63] DEBUG org.hibernate.SQL - update books set author=?,available_copies=?,genre=?,isbn=?,location=?,publish_year=?,status=?,title=?,total_copies=? where id=?
+2026-04-05 19:15:12.113 [Test worker] [b6cd31fe-5be8-4e57-b7c4-1e564f62ee76] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:12.118 [Test worker] [b6cd31fe-5be8-4e57-b7c4-1e564f62ee76] DEBUG org.hibernate.SQL - select f1_0.id,f1_0.amount,f1_0.checkout_id,f1_0.issued_date,f1_0.paid_date,f1_0.status,f1_0.user_id from fines f1_0 where f1_0.user_id=?
+2026-04-05 19:15:12.122 [Test worker] [b6cd31fe-5be8-4e57-b7c4-1e564f62ee76] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:12.132 [Test worker] [a2dce0df-b4fb-48cf-b3b9-f449fb6700a8] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:12.140 [Test worker] [no-corr-id] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 19:15:12.141 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists books cascade 
+2026-04-05 19:15:12.141 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists checkouts cascade 
+2026-04-05 19:15:12.142 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists fines cascade 
+2026-04-05 19:15:12.143 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists holds cascade 
+2026-04-05 19:15:12.147 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists users cascade 
+2026-04-05 19:15:12.149 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-30 - Shutdown initiated...
+2026-04-05 19:15:12.153 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-30 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.1)
+
+2026-04-05 19:15:12.181 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - Starting FineIntegrationTest using Java 21.0.10 with PID 482198 (started by mahesh in /media/drive/M@hii/WSU/Shruthi/Sem3/Software Quality/Project/Librarian Assistant)
+2026-04-05 19:15:12.181 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - No active profile set, falling back to 1 default profile: "default"
+2026-04-05 19:15:12.353 [Test worker] [no-corr-id] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-05 19:15:12.377 [Test worker] [no-corr-id] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 21 ms. Found 5 JPA repository interfaces.
+2026-04-05 19:15:12.466 [Test worker] [no-corr-id] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-05 19:15:12.495 [Test worker] [no-corr-id] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-05 19:15:12.497 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-31 - Starting...
+2026-04-05 19:15:12.498 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-31 - Added connection conn300: url=jdbc:h2:mem:testdb user=SA
+2026-04-05 19:15:12.499 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-31 - Start completed.
+2026-04-05 19:15:12.500 [Test worker] [no-corr-id] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-05 19:15:12.500 [Test worker] [no-corr-id] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:testdb]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: TESTDB/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-05 19:15:12.560 [Test worker] [no-corr-id] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-05 19:15:12.562 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists books cascade 
+2026-04-05 19:15:12.563 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists checkouts cascade 
+2026-04-05 19:15:12.564 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists fines cascade 
+2026-04-05 19:15:12.564 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists holds cascade 
+2026-04-05 19:15:12.564 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists users cascade 
+2026-04-05 19:15:12.565 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table books (available_copies integer not null, publish_year integer, total_copies integer not null, id bigint generated by default as identity, author varchar(255) not null, genre varchar(255), isbn varchar(255) not null unique, location varchar(255), title varchar(255) not null, status enum ('AVAILABLE','CHECKED_OUT','DAMAGED','LOST') not null, primary key (id))
+2026-04-05 19:15:12.567 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table checkouts (checkout_date date not null, due_date date not null, fine_amount numeric(38,2), renewal_count integer, return_date date, book_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('ACTIVE','OVERDUE','RETURNED') not null, primary key (id))
+2026-04-05 19:15:12.569 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table fines (amount numeric(38,2) not null, issued_date date not null, paid_date date, checkout_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('PAID','UNPAID','WAIVED') not null, primary key (id))
+2026-04-05 19:15:12.570 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table holds (expiration_date date, hold_date date not null, queue_position integer, book_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('CANCELLED','EXPIRED','FULFILLED','NOTIFIED','PENDING') not null, primary key (id))
+2026-04-05 19:15:12.571 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table users (registration_date date not null, id bigint generated by default as identity, email varchar(255) not null unique, name varchar(255) not null, password varchar(255) not null, role enum ('LIBRARIAN','PATRON') not null, status enum ('ACTIVE','SUSPENDED') not null, primary key (id))
+2026-04-05 19:15:12.573 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists checkouts add constraint FKgghse2fv6dx5inv4wi6dlp8jm foreign key (book_id) references books
+2026-04-05 19:15:12.574 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists checkouts add constraint FK4cffsff8atevplv45x3yagq34 foreign key (user_id) references users
+2026-04-05 19:15:12.575 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists fines add constraint FKaj3kkisa8d4hljsoyb7wxiul8 foreign key (checkout_id) references checkouts
+2026-04-05 19:15:12.576 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists fines add constraint FK96m5dw0wvbckhnnwfeynue15y foreign key (user_id) references users
+2026-04-05 19:15:12.578 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists holds add constraint FK321kkcta1yomy1hfrjyaa24hc foreign key (book_id) references books
+2026-04-05 19:15:12.579 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists holds add constraint FKrt8nfa31bpg91m6nshkw6stj1 foreign key (user_id) references users
+2026-04-05 19:15:12.583 [Test worker] [no-corr-id] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 19:15:12.650 [Test worker] [no-corr-id] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-04-05 19:15:12.710 [Test worker] [no-corr-id] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-05 19:15:12.916 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - Started FineIntegrationTest in 0.759 seconds (process running for 64.779)
+2026-04-05 19:15:12.919 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select count(*) from users u1_0
+2026-04-05 19:15:13.080 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:13.081 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:13.085 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select count(*) from books b1_0
+2026-04-05 19:15:13.087 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:13.089 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:13.093 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:13.094 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:13.095 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:13.099 [Test worker] [no-corr-id] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-04-05 19:15:13.099 [Test worker] [no-corr-id] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-04-05 19:15:13.101 [Test worker] [no-corr-id] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-04-05 19:15:13.103 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select u1_0.id from users u1_0 where u1_0.email=? fetch first ? rows only
+2026-04-05 19:15:13.184 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:13.186 [Test worker] [no-corr-id] INFO  c.e.l.service.UserService - User registered: id=3, email=finelib@test.com, role=LIBRARIAN
+2026-04-05 19:15:13.187 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select u1_0.id from users u1_0 where u1_0.email=? fetch first ? rows only
+2026-04-05 19:15:13.270 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:13.272 [Test worker] [no-corr-id] INFO  c.e.l.service.UserService - User registered: id=4, email=finepat@test.com, role=PATRON
+2026-04-05 19:15:13.274 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:13.279 [Test worker] [e04dd5f6-992d-4adb-accc-3595aeae8865] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:13.282 [Test worker] [e04dd5f6-992d-4adb-accc-3595aeae8865] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:13.284 [Test worker] [e04dd5f6-992d-4adb-accc-3595aeae8865] DEBUG org.hibernate.SQL - select b1_0.id,b1_0.author,b1_0.available_copies,b1_0.genre,b1_0.isbn,b1_0.location,b1_0.publish_year,b1_0.status,b1_0.title,b1_0.total_copies from books b1_0 where b1_0.id=?
+2026-04-05 19:15:13.288 [Test worker] [e04dd5f6-992d-4adb-accc-3595aeae8865] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.user_id=? and c1_0.book_id=? and c1_0.status=?
+2026-04-05 19:15:13.290 [Test worker] [e04dd5f6-992d-4adb-accc-3595aeae8865] DEBUG org.hibernate.SQL - insert into checkouts (book_id,checkout_date,due_date,fine_amount,renewal_count,return_date,status,user_id,id) values (?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:13.291 [Test worker] [e04dd5f6-992d-4adb-accc-3595aeae8865] INFO  c.e.l.service.CirculationService - Checkout created: checkoutId=1, userId=4, book='Fine Test Book', dueDate=2026-04-19
+2026-04-05 19:15:13.292 [Test worker] [e04dd5f6-992d-4adb-accc-3595aeae8865] DEBUG org.hibernate.SQL - update books set author=?,available_copies=?,genre=?,isbn=?,location=?,publish_year=?,status=?,title=?,total_copies=? where id=?
+2026-04-05 19:15:13.299 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:13.303 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:13.306 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - update checkouts set book_id=?,checkout_date=?,due_date=?,fine_amount=?,renewal_count=?,return_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:13.311 [Test worker] [46ba99d5-cecd-473c-906f-1f3ef9813208] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:13.314 [Test worker] [46ba99d5-cecd-473c-906f-1f3ef9813208] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:13.315 [Test worker] [46ba99d5-cecd-473c-906f-1f3ef9813208] INFO  c.e.l.service.CirculationService - Fine generated: checkoutId=1, daysOverdue=10, amount=2.50
+2026-04-05 19:15:13.316 [Test worker] [46ba99d5-cecd-473c-906f-1f3ef9813208] DEBUG org.hibernate.SQL - insert into fines (amount,checkout_id,issued_date,paid_date,status,user_id,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:13.317 [Test worker] [46ba99d5-cecd-473c-906f-1f3ef9813208] DEBUG org.hibernate.SQL - select b1_0.id,b1_0.author,b1_0.available_copies,b1_0.genre,b1_0.isbn,b1_0.location,b1_0.publish_year,b1_0.status,b1_0.title,b1_0.total_copies from books b1_0 where b1_0.id=?
+2026-04-05 19:15:13.318 [Test worker] [46ba99d5-cecd-473c-906f-1f3ef9813208] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:13.319 [Test worker] [46ba99d5-cecd-473c-906f-1f3ef9813208] INFO  c.e.l.service.CirculationService - Book returned: checkoutId=1, userId=4, book='Fine Test Book'
+2026-04-05 19:15:13.323 [Test worker] [46ba99d5-cecd-473c-906f-1f3ef9813208] DEBUG org.hibernate.SQL - select h1_0.id,h1_0.book_id,h1_0.expiration_date,h1_0.hold_date,h1_0.queue_position,h1_0.status,h1_0.user_id from holds h1_0 where h1_0.book_id=? and h1_0.status=? order by h1_0.hold_date fetch first ? rows only
+2026-04-05 19:15:13.324 [Test worker] [46ba99d5-cecd-473c-906f-1f3ef9813208] DEBUG org.hibernate.SQL - update checkouts set book_id=?,checkout_date=?,due_date=?,fine_amount=?,renewal_count=?,return_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:13.326 [Test worker] [46ba99d5-cecd-473c-906f-1f3ef9813208] DEBUG org.hibernate.SQL - update books set author=?,available_copies=?,genre=?,isbn=?,location=?,publish_year=?,status=?,title=?,total_copies=? where id=?
+2026-04-05 19:15:13.331 [Test worker] [8301cadd-9920-4d15-b6ad-cd3a53d35f01] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:13.336 [Test worker] [8301cadd-9920-4d15-b6ad-cd3a53d35f01] DEBUG org.hibernate.SQL - select f1_0.id,f1_0.amount,f1_0.checkout_id,f1_0.issued_date,f1_0.paid_date,f1_0.status,f1_0.user_id from fines f1_0 where f1_0.user_id=?
+2026-04-05 19:15:13.338 [Test worker] [8301cadd-9920-4d15-b6ad-cd3a53d35f01] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:13.345 [Test worker] [f81e4869-16cc-402a-a9ef-add46eda6f89] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:13.348 [Test worker] [f81e4869-16cc-402a-a9ef-add46eda6f89] DEBUG org.hibernate.SQL - select f1_0.id,f1_0.amount,f1_0.checkout_id,f1_0.issued_date,f1_0.paid_date,f1_0.status,f1_0.user_id from fines f1_0 where f1_0.id=?
+2026-04-05 19:15:13.350 [Test worker] [f81e4869-16cc-402a-a9ef-add46eda6f89] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:13.350 [Test worker] [f81e4869-16cc-402a-a9ef-add46eda6f89] INFO  c.e.l.service.FineService - Fine waived: fineId=1, userId=4, amount=2.50
+2026-04-05 19:15:13.351 [Test worker] [f81e4869-16cc-402a-a9ef-add46eda6f89] DEBUG org.hibernate.SQL - update fines set amount=?,checkout_id=?,issued_date=?,paid_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:13.359 [Test worker] [no-corr-id] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 19:15:13.359 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists books cascade 
+2026-04-05 19:15:13.360 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists checkouts cascade 
+2026-04-05 19:15:13.361 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists fines cascade 
+2026-04-05 19:15:13.362 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists holds cascade 
+2026-04-05 19:15:13.363 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists users cascade 
+2026-04-05 19:15:13.364 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-31 - Shutdown initiated...
+2026-04-05 19:15:13.369 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-31 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.1)
+
+2026-04-05 19:15:13.399 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - Starting FineIntegrationTest using Java 21.0.10 with PID 482198 (started by mahesh in /media/drive/M@hii/WSU/Shruthi/Sem3/Software Quality/Project/Librarian Assistant)
+2026-04-05 19:15:13.400 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - No active profile set, falling back to 1 default profile: "default"
+2026-04-05 19:15:13.580 [Test worker] [no-corr-id] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-05 19:15:13.608 [Test worker] [no-corr-id] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 24 ms. Found 5 JPA repository interfaces.
+2026-04-05 19:15:13.732 [Test worker] [no-corr-id] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-05 19:15:13.764 [Test worker] [no-corr-id] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-05 19:15:13.767 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-32 - Starting...
+2026-04-05 19:15:13.772 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-32 - Added connection conn310: url=jdbc:h2:mem:testdb user=SA
+2026-04-05 19:15:13.772 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-32 - Start completed.
+2026-04-05 19:15:13.773 [Test worker] [no-corr-id] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-05 19:15:13.773 [Test worker] [no-corr-id] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:testdb]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: TESTDB/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-05 19:15:13.845 [Test worker] [no-corr-id] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-05 19:15:13.847 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists books cascade 
+2026-04-05 19:15:13.847 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists checkouts cascade 
+2026-04-05 19:15:13.847 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists fines cascade 
+2026-04-05 19:15:13.848 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists holds cascade 
+2026-04-05 19:15:13.848 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists users cascade 
+2026-04-05 19:15:13.849 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table books (available_copies integer not null, publish_year integer, total_copies integer not null, id bigint generated by default as identity, author varchar(255) not null, genre varchar(255), isbn varchar(255) not null unique, location varchar(255), title varchar(255) not null, status enum ('AVAILABLE','CHECKED_OUT','DAMAGED','LOST') not null, primary key (id))
+2026-04-05 19:15:13.851 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table checkouts (checkout_date date not null, due_date date not null, fine_amount numeric(38,2), renewal_count integer, return_date date, book_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('ACTIVE','OVERDUE','RETURNED') not null, primary key (id))
+2026-04-05 19:15:13.852 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table fines (amount numeric(38,2) not null, issued_date date not null, paid_date date, checkout_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('PAID','UNPAID','WAIVED') not null, primary key (id))
+2026-04-05 19:15:13.853 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table holds (expiration_date date, hold_date date not null, queue_position integer, book_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('CANCELLED','EXPIRED','FULFILLED','NOTIFIED','PENDING') not null, primary key (id))
+2026-04-05 19:15:13.853 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table users (registration_date date not null, id bigint generated by default as identity, email varchar(255) not null unique, name varchar(255) not null, password varchar(255) not null, role enum ('LIBRARIAN','PATRON') not null, status enum ('ACTIVE','SUSPENDED') not null, primary key (id))
+2026-04-05 19:15:13.854 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists checkouts add constraint FKgghse2fv6dx5inv4wi6dlp8jm foreign key (book_id) references books
+2026-04-05 19:15:13.856 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists checkouts add constraint FK4cffsff8atevplv45x3yagq34 foreign key (user_id) references users
+2026-04-05 19:15:13.858 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists fines add constraint FKaj3kkisa8d4hljsoyb7wxiul8 foreign key (checkout_id) references checkouts
+2026-04-05 19:15:13.860 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists fines add constraint FK96m5dw0wvbckhnnwfeynue15y foreign key (user_id) references users
+2026-04-05 19:15:13.861 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists holds add constraint FK321kkcta1yomy1hfrjyaa24hc foreign key (book_id) references books
+2026-04-05 19:15:13.863 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists holds add constraint FKrt8nfa31bpg91m6nshkw6stj1 foreign key (user_id) references users
+2026-04-05 19:15:13.866 [Test worker] [no-corr-id] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 19:15:13.942 [Test worker] [no-corr-id] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-04-05 19:15:14.009 [Test worker] [no-corr-id] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-05 19:15:14.227 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - Started FineIntegrationTest in 0.854 seconds (process running for 66.09)
+2026-04-05 19:15:14.229 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select count(*) from users u1_0
+2026-04-05 19:15:14.399 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:14.401 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:14.404 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select count(*) from books b1_0
+2026-04-05 19:15:14.409 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:14.411 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:14.413 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:14.415 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:14.416 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:14.420 [Test worker] [no-corr-id] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-04-05 19:15:14.420 [Test worker] [no-corr-id] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-04-05 19:15:14.422 [Test worker] [no-corr-id] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-04-05 19:15:14.425 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select u1_0.id from users u1_0 where u1_0.email=? fetch first ? rows only
+2026-04-05 19:15:14.516 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:14.517 [Test worker] [no-corr-id] INFO  c.e.l.service.UserService - User registered: id=3, email=finelib@test.com, role=LIBRARIAN
+2026-04-05 19:15:14.519 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select u1_0.id from users u1_0 where u1_0.email=? fetch first ? rows only
+2026-04-05 19:15:14.607 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:14.609 [Test worker] [no-corr-id] INFO  c.e.l.service.UserService - User registered: id=4, email=finepat@test.com, role=PATRON
+2026-04-05 19:15:14.611 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:14.620 [Test worker] [d28b172b-d63b-484a-b6d9-3316ba05c82b] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:14.624 [Test worker] [d28b172b-d63b-484a-b6d9-3316ba05c82b] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:14.626 [Test worker] [d28b172b-d63b-484a-b6d9-3316ba05c82b] DEBUG org.hibernate.SQL - select b1_0.id,b1_0.author,b1_0.available_copies,b1_0.genre,b1_0.isbn,b1_0.location,b1_0.publish_year,b1_0.status,b1_0.title,b1_0.total_copies from books b1_0 where b1_0.id=?
+2026-04-05 19:15:14.631 [Test worker] [d28b172b-d63b-484a-b6d9-3316ba05c82b] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.user_id=? and c1_0.book_id=? and c1_0.status=?
+2026-04-05 19:15:14.633 [Test worker] [d28b172b-d63b-484a-b6d9-3316ba05c82b] DEBUG org.hibernate.SQL - insert into checkouts (book_id,checkout_date,due_date,fine_amount,renewal_count,return_date,status,user_id,id) values (?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:14.635 [Test worker] [d28b172b-d63b-484a-b6d9-3316ba05c82b] INFO  c.e.l.service.CirculationService - Checkout created: checkoutId=1, userId=4, book='Fine Test Book', dueDate=2026-04-19
+2026-04-05 19:15:14.636 [Test worker] [d28b172b-d63b-484a-b6d9-3316ba05c82b] DEBUG org.hibernate.SQL - update books set author=?,available_copies=?,genre=?,isbn=?,location=?,publish_year=?,status=?,title=?,total_copies=? where id=?
+2026-04-05 19:15:14.646 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:14.649 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:14.651 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - update checkouts set book_id=?,checkout_date=?,due_date=?,fine_amount=?,renewal_count=?,return_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:14.655 [Test worker] [5b84bf6c-1057-4dec-8bf6-5cb7d8ca2aaf] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:14.658 [Test worker] [5b84bf6c-1057-4dec-8bf6-5cb7d8ca2aaf] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:14.659 [Test worker] [5b84bf6c-1057-4dec-8bf6-5cb7d8ca2aaf] INFO  c.e.l.service.CirculationService - Fine generated: checkoutId=1, daysOverdue=10, amount=2.50
+2026-04-05 19:15:14.660 [Test worker] [5b84bf6c-1057-4dec-8bf6-5cb7d8ca2aaf] DEBUG org.hibernate.SQL - insert into fines (amount,checkout_id,issued_date,paid_date,status,user_id,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:14.661 [Test worker] [5b84bf6c-1057-4dec-8bf6-5cb7d8ca2aaf] DEBUG org.hibernate.SQL - select b1_0.id,b1_0.author,b1_0.available_copies,b1_0.genre,b1_0.isbn,b1_0.location,b1_0.publish_year,b1_0.status,b1_0.title,b1_0.total_copies from books b1_0 where b1_0.id=?
+2026-04-05 19:15:14.662 [Test worker] [5b84bf6c-1057-4dec-8bf6-5cb7d8ca2aaf] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:14.663 [Test worker] [5b84bf6c-1057-4dec-8bf6-5cb7d8ca2aaf] INFO  c.e.l.service.CirculationService - Book returned: checkoutId=1, userId=4, book='Fine Test Book'
+2026-04-05 19:15:14.667 [Test worker] [5b84bf6c-1057-4dec-8bf6-5cb7d8ca2aaf] DEBUG org.hibernate.SQL - select h1_0.id,h1_0.book_id,h1_0.expiration_date,h1_0.hold_date,h1_0.queue_position,h1_0.status,h1_0.user_id from holds h1_0 where h1_0.book_id=? and h1_0.status=? order by h1_0.hold_date fetch first ? rows only
+2026-04-05 19:15:14.669 [Test worker] [5b84bf6c-1057-4dec-8bf6-5cb7d8ca2aaf] DEBUG org.hibernate.SQL - update checkouts set book_id=?,checkout_date=?,due_date=?,fine_amount=?,renewal_count=?,return_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:14.670 [Test worker] [5b84bf6c-1057-4dec-8bf6-5cb7d8ca2aaf] DEBUG org.hibernate.SQL - update books set author=?,available_copies=?,genre=?,isbn=?,location=?,publish_year=?,status=?,title=?,total_copies=? where id=?
+2026-04-05 19:15:14.674 [Test worker] [59a176eb-047f-4b54-9077-71ab27aa73f0] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:14.679 [Test worker] [59a176eb-047f-4b54-9077-71ab27aa73f0] DEBUG org.hibernate.SQL - select f1_0.id,f1_0.amount,f1_0.checkout_id,f1_0.issued_date,f1_0.paid_date,f1_0.status,f1_0.user_id from fines f1_0 where f1_0.user_id=?
+2026-04-05 19:15:14.680 [Test worker] [59a176eb-047f-4b54-9077-71ab27aa73f0] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:14.688 [Test worker] [e2e77e7a-26f8-4fbb-9917-3ca6fca46c92] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:14.693 [Test worker] [e2e77e7a-26f8-4fbb-9917-3ca6fca46c92] DEBUG org.hibernate.SQL - select f1_0.id,f1_0.amount,f1_0.checkout_id,f1_0.issued_date,f1_0.paid_date,f1_0.status,f1_0.user_id from fines f1_0 where f1_0.id=?
+2026-04-05 19:15:14.695 [Test worker] [e2e77e7a-26f8-4fbb-9917-3ca6fca46c92] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:14.695 [Test worker] [e2e77e7a-26f8-4fbb-9917-3ca6fca46c92] INFO  c.e.l.service.FineService - Fine paid: fineId=1, userId=4, amount=2.50
+2026-04-05 19:15:14.697 [Test worker] [e2e77e7a-26f8-4fbb-9917-3ca6fca46c92] DEBUG org.hibernate.SQL - update fines set amount=?,checkout_id=?,issued_date=?,paid_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:14.707 [Test worker] [no-corr-id] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 19:15:14.707 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists books cascade 
+2026-04-05 19:15:14.708 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists checkouts cascade 
+2026-04-05 19:15:14.709 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists fines cascade 
+2026-04-05 19:15:14.709 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists holds cascade 
+2026-04-05 19:15:14.710 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists users cascade 
+2026-04-05 19:15:14.710 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-32 - Shutdown initiated...
+2026-04-05 19:15:14.711 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-32 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.1)
+
+2026-04-05 19:15:14.739 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - Starting FineIntegrationTest using Java 21.0.10 with PID 482198 (started by mahesh in /media/drive/M@hii/WSU/Shruthi/Sem3/Software Quality/Project/Librarian Assistant)
+2026-04-05 19:15:14.739 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - No active profile set, falling back to 1 default profile: "default"
+2026-04-05 19:15:14.927 [Test worker] [no-corr-id] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-05 19:15:14.947 [Test worker] [no-corr-id] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 18 ms. Found 5 JPA repository interfaces.
+2026-04-05 19:15:15.018 [Test worker] [no-corr-id] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-05 19:15:15.046 [Test worker] [no-corr-id] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-05 19:15:15.049 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-33 - Starting...
+2026-04-05 19:15:15.054 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-33 - Added connection conn320: url=jdbc:h2:mem:testdb user=SA
+2026-04-05 19:15:15.054 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-33 - Start completed.
+2026-04-05 19:15:15.055 [Test worker] [no-corr-id] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-05 19:15:15.056 [Test worker] [no-corr-id] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:testdb]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: TESTDB/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-05 19:15:15.121 [Test worker] [no-corr-id] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-05 19:15:15.122 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists books cascade 
+2026-04-05 19:15:15.123 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists checkouts cascade 
+2026-04-05 19:15:15.123 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists fines cascade 
+2026-04-05 19:15:15.123 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists holds cascade 
+2026-04-05 19:15:15.123 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists users cascade 
+2026-04-05 19:15:15.124 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table books (available_copies integer not null, publish_year integer, total_copies integer not null, id bigint generated by default as identity, author varchar(255) not null, genre varchar(255), isbn varchar(255) not null unique, location varchar(255), title varchar(255) not null, status enum ('AVAILABLE','CHECKED_OUT','DAMAGED','LOST') not null, primary key (id))
+2026-04-05 19:15:15.125 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table checkouts (checkout_date date not null, due_date date not null, fine_amount numeric(38,2), renewal_count integer, return_date date, book_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('ACTIVE','OVERDUE','RETURNED') not null, primary key (id))
+2026-04-05 19:15:15.126 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table fines (amount numeric(38,2) not null, issued_date date not null, paid_date date, checkout_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('PAID','UNPAID','WAIVED') not null, primary key (id))
+2026-04-05 19:15:15.126 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table holds (expiration_date date, hold_date date not null, queue_position integer, book_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('CANCELLED','EXPIRED','FULFILLED','NOTIFIED','PENDING') not null, primary key (id))
+2026-04-05 19:15:15.127 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table users (registration_date date not null, id bigint generated by default as identity, email varchar(255) not null unique, name varchar(255) not null, password varchar(255) not null, role enum ('LIBRARIAN','PATRON') not null, status enum ('ACTIVE','SUSPENDED') not null, primary key (id))
+2026-04-05 19:15:15.128 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists checkouts add constraint FKgghse2fv6dx5inv4wi6dlp8jm foreign key (book_id) references books
+2026-04-05 19:15:15.129 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists checkouts add constraint FK4cffsff8atevplv45x3yagq34 foreign key (user_id) references users
+2026-04-05 19:15:15.130 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists fines add constraint FKaj3kkisa8d4hljsoyb7wxiul8 foreign key (checkout_id) references checkouts
+2026-04-05 19:15:15.130 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists fines add constraint FK96m5dw0wvbckhnnwfeynue15y foreign key (user_id) references users
+2026-04-05 19:15:15.131 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists holds add constraint FK321kkcta1yomy1hfrjyaa24hc foreign key (book_id) references books
+2026-04-05 19:15:15.132 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists holds add constraint FKrt8nfa31bpg91m6nshkw6stj1 foreign key (user_id) references users
+2026-04-05 19:15:15.134 [Test worker] [no-corr-id] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 19:15:15.207 [Test worker] [no-corr-id] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-04-05 19:15:15.269 [Test worker] [no-corr-id] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-05 19:15:15.478 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - Started FineIntegrationTest in 0.764 seconds (process running for 67.341)
+2026-04-05 19:15:15.480 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select count(*) from users u1_0
+2026-04-05 19:15:15.657 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:15.658 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:15.661 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select count(*) from books b1_0
+2026-04-05 19:15:15.663 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:15.664 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:15.665 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:15.666 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:15.668 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:15.671 [Test worker] [no-corr-id] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-04-05 19:15:15.672 [Test worker] [no-corr-id] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-04-05 19:15:15.673 [Test worker] [no-corr-id] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-04-05 19:15:15.679 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select u1_0.id from users u1_0 where u1_0.email=? fetch first ? rows only
+2026-04-05 19:15:15.763 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:15.765 [Test worker] [no-corr-id] INFO  c.e.l.service.UserService - User registered: id=3, email=finelib@test.com, role=LIBRARIAN
+2026-04-05 19:15:15.767 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select u1_0.id from users u1_0 where u1_0.email=? fetch first ? rows only
+2026-04-05 19:15:15.853 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:15.855 [Test worker] [no-corr-id] INFO  c.e.l.service.UserService - User registered: id=4, email=finepat@test.com, role=PATRON
+2026-04-05 19:15:15.859 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:15.865 [Test worker] [551ec6fd-dde0-4ad8-a6bf-4af26ea8593d] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:15.869 [Test worker] [551ec6fd-dde0-4ad8-a6bf-4af26ea8593d] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:15.871 [Test worker] [551ec6fd-dde0-4ad8-a6bf-4af26ea8593d] DEBUG org.hibernate.SQL - select b1_0.id,b1_0.author,b1_0.available_copies,b1_0.genre,b1_0.isbn,b1_0.location,b1_0.publish_year,b1_0.status,b1_0.title,b1_0.total_copies from books b1_0 where b1_0.id=?
+2026-04-05 19:15:15.876 [Test worker] [551ec6fd-dde0-4ad8-a6bf-4af26ea8593d] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.user_id=? and c1_0.book_id=? and c1_0.status=?
+2026-04-05 19:15:15.878 [Test worker] [551ec6fd-dde0-4ad8-a6bf-4af26ea8593d] DEBUG org.hibernate.SQL - insert into checkouts (book_id,checkout_date,due_date,fine_amount,renewal_count,return_date,status,user_id,id) values (?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:15.879 [Test worker] [551ec6fd-dde0-4ad8-a6bf-4af26ea8593d] INFO  c.e.l.service.CirculationService - Checkout created: checkoutId=1, userId=4, book='Fine Test Book', dueDate=2026-04-19
+2026-04-05 19:15:15.883 [Test worker] [551ec6fd-dde0-4ad8-a6bf-4af26ea8593d] DEBUG org.hibernate.SQL - update books set author=?,available_copies=?,genre=?,isbn=?,location=?,publish_year=?,status=?,title=?,total_copies=? where id=?
+2026-04-05 19:15:15.896 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:15.900 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:15.902 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - update checkouts set book_id=?,checkout_date=?,due_date=?,fine_amount=?,renewal_count=?,return_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:15.906 [Test worker] [487c931c-9a2f-42f4-9121-15e0d3459fa4] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:15.909 [Test worker] [487c931c-9a2f-42f4-9121-15e0d3459fa4] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:15.910 [Test worker] [487c931c-9a2f-42f4-9121-15e0d3459fa4] INFO  c.e.l.service.CirculationService - Fine generated: checkoutId=1, daysOverdue=10, amount=2.50
+2026-04-05 19:15:15.911 [Test worker] [487c931c-9a2f-42f4-9121-15e0d3459fa4] DEBUG org.hibernate.SQL - insert into fines (amount,checkout_id,issued_date,paid_date,status,user_id,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:15.912 [Test worker] [487c931c-9a2f-42f4-9121-15e0d3459fa4] DEBUG org.hibernate.SQL - select b1_0.id,b1_0.author,b1_0.available_copies,b1_0.genre,b1_0.isbn,b1_0.location,b1_0.publish_year,b1_0.status,b1_0.title,b1_0.total_copies from books b1_0 where b1_0.id=?
+2026-04-05 19:15:15.914 [Test worker] [487c931c-9a2f-42f4-9121-15e0d3459fa4] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:15.915 [Test worker] [487c931c-9a2f-42f4-9121-15e0d3459fa4] INFO  c.e.l.service.CirculationService - Book returned: checkoutId=1, userId=4, book='Fine Test Book'
+2026-04-05 19:15:15.919 [Test worker] [487c931c-9a2f-42f4-9121-15e0d3459fa4] DEBUG org.hibernate.SQL - select h1_0.id,h1_0.book_id,h1_0.expiration_date,h1_0.hold_date,h1_0.queue_position,h1_0.status,h1_0.user_id from holds h1_0 where h1_0.book_id=? and h1_0.status=? order by h1_0.hold_date fetch first ? rows only
+2026-04-05 19:15:15.921 [Test worker] [487c931c-9a2f-42f4-9121-15e0d3459fa4] DEBUG org.hibernate.SQL - update checkouts set book_id=?,checkout_date=?,due_date=?,fine_amount=?,renewal_count=?,return_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:15.922 [Test worker] [487c931c-9a2f-42f4-9121-15e0d3459fa4] DEBUG org.hibernate.SQL - update books set author=?,available_copies=?,genre=?,isbn=?,location=?,publish_year=?,status=?,title=?,total_copies=? where id=?
+2026-04-05 19:15:15.927 [Test worker] [e4fc9a8c-ea83-4add-b3c2-85fa23dd6aca] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:15.932 [Test worker] [e4fc9a8c-ea83-4add-b3c2-85fa23dd6aca] DEBUG org.hibernate.SQL - select f1_0.id,f1_0.amount,f1_0.checkout_id,f1_0.issued_date,f1_0.paid_date,f1_0.status,f1_0.user_id from fines f1_0 where f1_0.user_id=?
+2026-04-05 19:15:15.934 [Test worker] [e4fc9a8c-ea83-4add-b3c2-85fa23dd6aca] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:15.941 [Test worker] [2f75b506-925f-4a68-8f2e-1cc7bc81eeda] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:15.949 [Test worker] [2f75b506-925f-4a68-8f2e-1cc7bc81eeda] DEBUG org.hibernate.SQL - select f1_0.id,f1_0.amount,f1_0.checkout_id,f1_0.issued_date,f1_0.paid_date,f1_0.status,f1_0.user_id from fines f1_0 where f1_0.user_id=? and f1_0.status=?
+2026-04-05 19:15:15.958 [Test worker] [2f75b506-925f-4a68-8f2e-1cc7bc81eeda] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:15.965 [Test worker] [no-corr-id] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 19:15:15.966 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists books cascade 
+2026-04-05 19:15:15.967 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists checkouts cascade 
+2026-04-05 19:15:15.967 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists fines cascade 
+2026-04-05 19:15:15.968 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists holds cascade 
+2026-04-05 19:15:15.969 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists users cascade 
+2026-04-05 19:15:15.970 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-33 - Shutdown initiated...
+2026-04-05 19:15:15.971 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-33 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.1)
+
+2026-04-05 19:15:15.996 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - Starting FineIntegrationTest using Java 21.0.10 with PID 482198 (started by mahesh in /media/drive/M@hii/WSU/Shruthi/Sem3/Software Quality/Project/Librarian Assistant)
+2026-04-05 19:15:15.997 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - No active profile set, falling back to 1 default profile: "default"
+2026-04-05 19:15:16.187 [Test worker] [no-corr-id] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-05 19:15:16.216 [Test worker] [no-corr-id] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 27 ms. Found 5 JPA repository interfaces.
+2026-04-05 19:15:16.289 [Test worker] [no-corr-id] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-05 19:15:16.316 [Test worker] [no-corr-id] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-05 19:15:16.317 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-34 - Starting...
+2026-04-05 19:15:16.319 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-34 - Added connection conn330: url=jdbc:h2:mem:testdb user=SA
+2026-04-05 19:15:16.320 [Test worker] [no-corr-id] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-34 - Start completed.
+2026-04-05 19:15:16.321 [Test worker] [no-corr-id] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-05 19:15:16.321 [Test worker] [no-corr-id] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:testdb]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: TESTDB/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-05 19:15:16.386 [Test worker] [no-corr-id] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-05 19:15:16.388 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists books cascade 
+2026-04-05 19:15:16.388 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists checkouts cascade 
+2026-04-05 19:15:16.389 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists fines cascade 
+2026-04-05 19:15:16.389 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists holds cascade 
+2026-04-05 19:15:16.389 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - drop table if exists users cascade 
+2026-04-05 19:15:16.390 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table books (available_copies integer not null, publish_year integer, total_copies integer not null, id bigint generated by default as identity, author varchar(255) not null, genre varchar(255), isbn varchar(255) not null unique, location varchar(255), title varchar(255) not null, status enum ('AVAILABLE','CHECKED_OUT','DAMAGED','LOST') not null, primary key (id))
+2026-04-05 19:15:16.391 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table checkouts (checkout_date date not null, due_date date not null, fine_amount numeric(38,2), renewal_count integer, return_date date, book_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('ACTIVE','OVERDUE','RETURNED') not null, primary key (id))
+2026-04-05 19:15:16.392 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table fines (amount numeric(38,2) not null, issued_date date not null, paid_date date, checkout_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('PAID','UNPAID','WAIVED') not null, primary key (id))
+2026-04-05 19:15:16.393 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table holds (expiration_date date, hold_date date not null, queue_position integer, book_id bigint not null, id bigint generated by default as identity, user_id bigint not null, status enum ('CANCELLED','EXPIRED','FULFILLED','NOTIFIED','PENDING') not null, primary key (id))
+2026-04-05 19:15:16.395 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - create table users (registration_date date not null, id bigint generated by default as identity, email varchar(255) not null unique, name varchar(255) not null, password varchar(255) not null, role enum ('LIBRARIAN','PATRON') not null, status enum ('ACTIVE','SUSPENDED') not null, primary key (id))
+2026-04-05 19:15:16.396 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists checkouts add constraint FKgghse2fv6dx5inv4wi6dlp8jm foreign key (book_id) references books
+2026-04-05 19:15:16.397 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists checkouts add constraint FK4cffsff8atevplv45x3yagq34 foreign key (user_id) references users
+2026-04-05 19:15:16.398 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists fines add constraint FKaj3kkisa8d4hljsoyb7wxiul8 foreign key (checkout_id) references checkouts
+2026-04-05 19:15:16.400 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists fines add constraint FK96m5dw0wvbckhnnwfeynue15y foreign key (user_id) references users
+2026-04-05 19:15:16.401 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists holds add constraint FK321kkcta1yomy1hfrjyaa24hc foreign key (book_id) references books
+2026-04-05 19:15:16.402 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - alter table if exists holds add constraint FKrt8nfa31bpg91m6nshkw6stj1 foreign key (user_id) references users
+2026-04-05 19:15:16.404 [Test worker] [no-corr-id] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 19:15:16.468 [Test worker] [no-corr-id] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-04-05 19:15:16.525 [Test worker] [no-corr-id] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-05 19:15:16.789 [Test worker] [no-corr-id] INFO  c.e.l.i.FineIntegrationTest - Started FineIntegrationTest in 0.816 seconds (process running for 68.652)
+2026-04-05 19:15:16.793 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select count(*) from users u1_0
+2026-04-05 19:15:16.966 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:16.968 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:16.972 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select count(*) from books b1_0
+2026-04-05 19:15:16.974 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:16.976 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:16.977 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:16.977 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:16.978 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:16.982 [Test worker] [no-corr-id] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-04-05 19:15:16.983 [Test worker] [no-corr-id] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-04-05 19:15:16.983 [Test worker] [no-corr-id] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-04-05 19:15:16.986 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select u1_0.id from users u1_0 where u1_0.email=? fetch first ? rows only
+2026-04-05 19:15:17.070 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:17.072 [Test worker] [no-corr-id] INFO  c.e.l.service.UserService - User registered: id=3, email=finelib@test.com, role=LIBRARIAN
+2026-04-05 19:15:17.075 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select u1_0.id from users u1_0 where u1_0.email=? fetch first ? rows only
+2026-04-05 19:15:17.164 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into users (email,name,password,registration_date,role,status,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:17.169 [Test worker] [no-corr-id] INFO  c.e.l.service.UserService - User registered: id=4, email=finepat@test.com, role=PATRON
+2026-04-05 19:15:17.172 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - insert into books (author,available_copies,genre,isbn,location,publish_year,status,title,total_copies,id) values (?,?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:17.179 [Test worker] [059931b5-b361-4336-8be1-8655f03a23db] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:17.184 [Test worker] [059931b5-b361-4336-8be1-8655f03a23db] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:17.187 [Test worker] [059931b5-b361-4336-8be1-8655f03a23db] DEBUG org.hibernate.SQL - select b1_0.id,b1_0.author,b1_0.available_copies,b1_0.genre,b1_0.isbn,b1_0.location,b1_0.publish_year,b1_0.status,b1_0.title,b1_0.total_copies from books b1_0 where b1_0.id=?
+2026-04-05 19:15:17.193 [Test worker] [059931b5-b361-4336-8be1-8655f03a23db] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.user_id=? and c1_0.book_id=? and c1_0.status=?
+2026-04-05 19:15:17.195 [Test worker] [059931b5-b361-4336-8be1-8655f03a23db] DEBUG org.hibernate.SQL - insert into checkouts (book_id,checkout_date,due_date,fine_amount,renewal_count,return_date,status,user_id,id) values (?,?,?,?,?,?,?,?,default)
+2026-04-05 19:15:17.197 [Test worker] [059931b5-b361-4336-8be1-8655f03a23db] INFO  c.e.l.service.CirculationService - Checkout created: checkoutId=1, userId=4, book='Fine Test Book', dueDate=2026-04-19
+2026-04-05 19:15:17.198 [Test worker] [059931b5-b361-4336-8be1-8655f03a23db] DEBUG org.hibernate.SQL - update books set author=?,available_copies=?,genre=?,isbn=?,location=?,publish_year=?,status=?,title=?,total_copies=? where id=?
+2026-04-05 19:15:17.206 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:17.210 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:17.212 [Test worker] [no-corr-id] DEBUG org.hibernate.SQL - update checkouts set book_id=?,checkout_date=?,due_date=?,fine_amount=?,renewal_count=?,return_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:17.216 [Test worker] [6b9eb41f-ff84-4ac4-ac0d-9485229fa50a] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:17.218 [Test worker] [6b9eb41f-ff84-4ac4-ac0d-9485229fa50a] DEBUG org.hibernate.SQL - select c1_0.id,c1_0.book_id,c1_0.checkout_date,c1_0.due_date,c1_0.fine_amount,c1_0.renewal_count,c1_0.return_date,c1_0.status,c1_0.user_id from checkouts c1_0 where c1_0.id=?
+2026-04-05 19:15:17.220 [Test worker] [6b9eb41f-ff84-4ac4-ac0d-9485229fa50a] INFO  c.e.l.service.CirculationService - Fine generated: checkoutId=1, daysOverdue=10, amount=2.50
+2026-04-05 19:15:17.221 [Test worker] [6b9eb41f-ff84-4ac4-ac0d-9485229fa50a] DEBUG org.hibernate.SQL - insert into fines (amount,checkout_id,issued_date,paid_date,status,user_id,id) values (?,?,?,?,?,?,default)
+2026-04-05 19:15:17.222 [Test worker] [6b9eb41f-ff84-4ac4-ac0d-9485229fa50a] DEBUG org.hibernate.SQL - select b1_0.id,b1_0.author,b1_0.available_copies,b1_0.genre,b1_0.isbn,b1_0.location,b1_0.publish_year,b1_0.status,b1_0.title,b1_0.total_copies from books b1_0 where b1_0.id=?
+2026-04-05 19:15:17.224 [Test worker] [6b9eb41f-ff84-4ac4-ac0d-9485229fa50a] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:17.225 [Test worker] [6b9eb41f-ff84-4ac4-ac0d-9485229fa50a] INFO  c.e.l.service.CirculationService - Book returned: checkoutId=1, userId=4, book='Fine Test Book'
+2026-04-05 19:15:17.230 [Test worker] [6b9eb41f-ff84-4ac4-ac0d-9485229fa50a] DEBUG org.hibernate.SQL - select h1_0.id,h1_0.book_id,h1_0.expiration_date,h1_0.hold_date,h1_0.queue_position,h1_0.status,h1_0.user_id from holds h1_0 where h1_0.book_id=? and h1_0.status=? order by h1_0.hold_date fetch first ? rows only
+2026-04-05 19:15:17.232 [Test worker] [6b9eb41f-ff84-4ac4-ac0d-9485229fa50a] DEBUG org.hibernate.SQL - update checkouts set book_id=?,checkout_date=?,due_date=?,fine_amount=?,renewal_count=?,return_date=?,status=?,user_id=? where id=?
+2026-04-05 19:15:17.233 [Test worker] [6b9eb41f-ff84-4ac4-ac0d-9485229fa50a] DEBUG org.hibernate.SQL - update books set author=?,available_copies=?,genre=?,isbn=?,location=?,publish_year=?,status=?,title=?,total_copies=? where id=?
+2026-04-05 19:15:17.239 [Test worker] [494bc246-b6f6-4b51-8992-b805bb9f9ee6] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:17.243 [Test worker] [494bc246-b6f6-4b51-8992-b805bb9f9ee6] DEBUG org.hibernate.SQL - select f1_0.id,f1_0.amount,f1_0.checkout_id,f1_0.issued_date,f1_0.paid_date,f1_0.status,f1_0.user_id from fines f1_0 where f1_0.user_id=?
+2026-04-05 19:15:17.245 [Test worker] [494bc246-b6f6-4b51-8992-b805bb9f9ee6] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+2026-04-05 19:15:17.253 [Test worker] [9e3b0baf-d3fc-472d-a6b1-671765bbf986] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.email=?
+2026-04-05 19:15:17.256 [Test worker] [9e3b0baf-d3fc-472d-a6b1-671765bbf986] DEBUG org.hibernate.SQL - select f1_0.id,f1_0.amount,f1_0.checkout_id,f1_0.issued_date,f1_0.paid_date,f1_0.status,f1_0.user_id from fines f1_0 where f1_0.user_id=?
+2026-04-05 19:15:17.257 [Test worker] [9e3b0baf-d3fc-472d-a6b1-671765bbf986] DEBUG org.hibernate.SQL - select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.registration_date,u1_0.role,u1_0.status from users u1_0 where u1_0.id=?
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CirculationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">LibrarianAssistant</a> &gt; <a href="index.source.html" class="el_package">com.example.librarianassistant.service</a> &gt; <span class="el_source">CirculationService.java</span></div><h1>CirculationService.java</h1><pre class="source lang-java linenums">package com.example.librarianassistant.service;
+
+import com.example.librarianassistant.dto.CheckoutResponse;
+import com.example.librarianassistant.exception.BusinessException;
+import com.example.librarianassistant.exception.ResourceNotFoundException;
+import com.example.librarianassistant.model.Book;
+import com.example.librarianassistant.model.Checkout;
+import com.example.librarianassistant.model.Fine;
+import com.example.librarianassistant.model.User;
+import com.example.librarianassistant.repository.BookRepository;
+import com.example.librarianassistant.repository.CheckoutRepository;
+import com.example.librarianassistant.repository.FineRepository;
+import com.example.librarianassistant.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
+
+<span class="fc" id="L26">@Slf4j</span>
+@Service
+@RequiredArgsConstructor
+public class CirculationService {
+
+    private static final int LOAN_PERIOD_DAYS = 14;
+    private static final int MAX_RENEWALS = 2;
+<span class="fc" id="L33">    private static final BigDecimal FINE_PER_DAY = new BigDecimal(&quot;0.25&quot;);</span>
+
+    private final CheckoutRepository checkoutRepository;
+    private final BookRepository bookRepository;
+    private final UserRepository userRepository;
+    private final FineRepository fineRepository;
+    @Lazy
+    private final HoldService holdService;
+
+    @Transactional
+    public CheckoutResponse checkoutBook(Long userId, Long bookId) {
+<span class="fc" id="L44">        User user = userRepository.findById(userId)</span>
+<span class="pc" id="L45">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;User not found: &quot; + userId));</span>
+<span class="fc" id="L46">        Book book = bookRepository.findById(bookId)</span>
+<span class="pc" id="L47">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Book not found: &quot; + bookId));</span>
+
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (book.getAvailableCopies() &lt;= 0) {</span>
+<span class="fc" id="L50">            throw new BusinessException(&quot;No available copies for book: &quot; + bookId);</span>
+        }
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (checkoutRepository.findByUserIdAndBookIdAndStatus(userId, bookId, Checkout.CheckoutStatus.ACTIVE).isPresent()) {</span>
+<span class="nc" id="L53">            throw new BusinessException(&quot;User already has this book checked out&quot;);</span>
+        }
+
+<span class="fc" id="L56">        book.setAvailableCopies(book.getAvailableCopies() - 1);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (book.getAvailableCopies() == 0) {</span>
+<span class="fc" id="L58">            book.setStatus(Book.BookStatus.CHECKED_OUT);</span>
+        }
+<span class="fc" id="L60">        bookRepository.save(book);</span>
+
+<span class="fc" id="L62">        Checkout checkout = Checkout.builder()</span>
+<span class="fc" id="L63">                .user(user)</span>
+<span class="fc" id="L64">                .book(book)</span>
+<span class="fc" id="L65">                .dueDate(LocalDate.now().plusDays(LOAN_PERIOD_DAYS))</span>
+<span class="fc" id="L66">                .build();</span>
+<span class="fc" id="L67">        CheckoutResponse response = toResponse(checkoutRepository.save(checkout));</span>
+<span class="fc" id="L68">        log.info(&quot;Checkout created: checkoutId={}, userId={}, book='{}', dueDate={}&quot;,</span>
+<span class="fc" id="L69">                response.getId(), userId, book.getTitle(), response.getDueDate());</span>
+<span class="fc" id="L70">        return response;</span>
+    }
+
+    @Transactional
+    public CheckoutResponse returnBook(Long checkoutId) {
+<span class="fc" id="L75">        Checkout checkout = checkoutRepository.findById(checkoutId)</span>
+<span class="pc" id="L76">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Checkout not found: &quot; + checkoutId));</span>
+
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (checkout.getStatus() == Checkout.CheckoutStatus.RETURNED) {</span>
+<span class="nc" id="L79">            throw new BusinessException(&quot;Book already returned&quot;);</span>
+        }
+
+<span class="fc" id="L82">        LocalDate returnDate = LocalDate.now();</span>
+<span class="fc" id="L83">        checkout.setReturnDate(returnDate);</span>
+<span class="fc" id="L84">        checkout.setStatus(Checkout.CheckoutStatus.RETURNED);</span>
+
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (returnDate.isAfter(checkout.getDueDate())) {</span>
+<span class="fc" id="L87">            long daysOverdue = ChronoUnit.DAYS.between(checkout.getDueDate(), returnDate);</span>
+<span class="fc" id="L88">            BigDecimal fineAmount = FINE_PER_DAY.multiply(BigDecimal.valueOf(daysOverdue));</span>
+<span class="fc" id="L89">            checkout.setFineAmount(fineAmount);</span>
+<span class="fc" id="L90">            log.info(&quot;Fine generated: checkoutId={}, daysOverdue={}, amount={}&quot;,</span>
+<span class="fc" id="L91">                    checkoutId, daysOverdue, fineAmount);</span>
+<span class="fc" id="L92">            Fine fine = Fine.builder()</span>
+<span class="fc" id="L93">                    .user(checkout.getUser())</span>
+<span class="fc" id="L94">                    .checkout(checkout)</span>
+<span class="fc" id="L95">                    .amount(fineAmount)</span>
+<span class="fc" id="L96">                    .build();</span>
+<span class="fc" id="L97">            fineRepository.save(fine);</span>
+        }
+
+<span class="fc" id="L100">        Book book = checkout.getBook();</span>
+<span class="fc" id="L101">        book.setAvailableCopies(book.getAvailableCopies() + 1);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (book.getStatus() == Book.BookStatus.CHECKED_OUT) {</span>
+<span class="fc" id="L103">            book.setStatus(Book.BookStatus.AVAILABLE);</span>
+        }
+<span class="fc" id="L105">        bookRepository.save(book);</span>
+
+<span class="fc" id="L107">        CheckoutResponse response = toResponse(checkoutRepository.save(checkout));</span>
+<span class="fc" id="L108">        log.info(&quot;Book returned: checkoutId={}, userId={}, book='{}'&quot;,</span>
+<span class="fc" id="L109">                checkoutId, checkout.getUser().getId(), book.getTitle());</span>
+<span class="fc" id="L110">        holdService.processNextHold(book.getId());</span>
+<span class="fc" id="L111">        return response;</span>
+    }
+
+    @Transactional
+    public CheckoutResponse renewCheckout(Long checkoutId) {
+<span class="fc" id="L116">        Checkout checkout = checkoutRepository.findById(checkoutId)</span>
+<span class="pc" id="L117">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Checkout not found: &quot; + checkoutId));</span>
+
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        if (checkout.getStatus() != Checkout.CheckoutStatus.ACTIVE) {</span>
+<span class="nc" id="L120">            throw new BusinessException(&quot;Only active checkouts can be renewed&quot;);</span>
+        }
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (checkout.getRenewalCount() &gt;= MAX_RENEWALS) {</span>
+<span class="fc" id="L123">            throw new BusinessException(&quot;Maximum renewals (&quot; + MAX_RENEWALS + &quot;) reached&quot;);</span>
+        }
+
+<span class="fc" id="L126">        checkout.setDueDate(checkout.getDueDate().plusDays(LOAN_PERIOD_DAYS));</span>
+<span class="fc" id="L127">        checkout.setRenewalCount(checkout.getRenewalCount() + 1);</span>
+<span class="fc" id="L128">        CheckoutResponse response = toResponse(checkoutRepository.save(checkout));</span>
+<span class="fc" id="L129">        log.info(&quot;Checkout renewed: checkoutId={}, newDueDate={}, renewalCount={}&quot;,</span>
+<span class="fc" id="L130">                checkoutId, response.getDueDate(), response.getRenewalCount());</span>
+<span class="fc" id="L131">        return response;</span>
+    }
+
+    public List&lt;CheckoutResponse&gt; getUserCheckouts(Long userId) {
+<span class="nc" id="L135">        return checkoutRepository.findByUserId(userId).stream()</span>
+<span class="nc" id="L136">                .map(this::toResponse)</span>
+<span class="nc" id="L137">                .collect(Collectors.toList());</span>
+    }
+
+    public List&lt;CheckoutResponse&gt; getOverdueCheckouts() {
+<span class="fc" id="L141">        return checkoutRepository.findOverdue(LocalDate.now()).stream()</span>
+<span class="fc" id="L142">                .map(this::toResponse)</span>
+<span class="fc" id="L143">                .collect(Collectors.toList());</span>
+    }
+
+    private CheckoutResponse toResponse(Checkout c) {
+<span class="fc" id="L147">        return CheckoutResponse.builder()</span>
+<span class="fc" id="L148">                .id(c.getId())</span>
+<span class="fc" id="L149">                .userId(c.getUser().getId())</span>
+<span class="fc" id="L150">                .userName(c.getUser().getName())</span>
+<span class="fc" id="L151">                .bookId(c.getBook().getId())</span>
+<span class="fc" id="L152">                .bookTitle(c.getBook().getTitle())</span>
+<span class="fc" id="L153">                .bookIsbn(c.getBook().getIsbn())</span>
+<span class="fc" id="L154">                .checkoutDate(c.getCheckoutDate())</span>
+<span class="fc" id="L155">                .dueDate(c.getDueDate())</span>
+<span class="fc" id="L156">                .returnDate(c.getReturnDate())</span>
+<span class="fc" id="L157">                .renewalCount(c.getRenewalCount())</span>
+<span class="fc" id="L158">                .fineAmount(c.getFineAmount())</span>
+<span class="fc" id="L159">                .status(c.getStatus())</span>
+<span class="fc" id="L160">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FineService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">LibrarianAssistant</a> &gt; <a href="index.source.html" class="el_package">com.example.librarianassistant.service</a> &gt; <span class="el_source">FineService.java</span></div><h1>FineService.java</h1><pre class="source lang-java linenums">package com.example.librarianassistant.service;
+
+import com.example.librarianassistant.dto.FineResponse;
+import com.example.librarianassistant.exception.ResourceNotFoundException;
+import com.example.librarianassistant.model.Fine;
+import com.example.librarianassistant.repository.FineRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+<span class="fc" id="L17">@Slf4j</span>
+@Service
+@RequiredArgsConstructor
+public class FineService {
+
+    private final FineRepository fineRepository;
+
+    @Transactional(readOnly = true)
+    public List&lt;FineResponse&gt; getUserFines(Long userId) {
+<span class="fc" id="L26">        return fineRepository.findByUserId(userId).stream()</span>
+<span class="fc" id="L27">                .map(this::toResponse)</span>
+<span class="fc" id="L28">                .collect(Collectors.toList());</span>
+    }
+
+    @Transactional(readOnly = true)
+    public List&lt;FineResponse&gt; getUnpaidFines(Long userId) {
+<span class="fc" id="L33">        return fineRepository.findByUserIdAndStatus(userId, Fine.FineStatus.UNPAID).stream()</span>
+<span class="fc" id="L34">                .map(this::toResponse)</span>
+<span class="fc" id="L35">                .collect(Collectors.toList());</span>
+    }
+
+    @Transactional
+    public FineResponse payFine(Long fineId) {
+<span class="fc" id="L40">        Fine fine = fineRepository.findById(fineId)</span>
+<span class="pc" id="L41">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Fine not found: &quot; + fineId));</span>
+<span class="fc" id="L42">        fine.setStatus(Fine.FineStatus.PAID);</span>
+<span class="fc" id="L43">        fine.setPaidDate(LocalDate.now());</span>
+<span class="fc" id="L44">        FineResponse response = toResponse(fineRepository.save(fine));</span>
+<span class="fc" id="L45">        log.info(&quot;Fine paid: fineId={}, userId={}, amount={}&quot;,</span>
+<span class="fc" id="L46">                fineId, fine.getUser().getId(), fine.getAmount());</span>
+<span class="fc" id="L47">        return response;</span>
+    }
+
+    @Transactional
+    public FineResponse waiveFine(Long fineId) {
+<span class="fc" id="L52">        Fine fine = fineRepository.findById(fineId)</span>
+<span class="pc" id="L53">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Fine not found: &quot; + fineId));</span>
+<span class="fc" id="L54">        fine.setStatus(Fine.FineStatus.WAIVED);</span>
+<span class="fc" id="L55">        fine.setPaidDate(LocalDate.now());</span>
+<span class="fc" id="L56">        FineResponse response = toResponse(fineRepository.save(fine));</span>
+<span class="fc" id="L57">        log.info(&quot;Fine waived: fineId={}, userId={}, amount={}&quot;,</span>
+<span class="fc" id="L58">                fineId, fine.getUser().getId(), fine.getAmount());</span>
+<span class="fc" id="L59">        return response;</span>
+    }
+
+    @Transactional(readOnly = true)
+    public BigDecimal getTotalUnpaid(Long userId) {
+<span class="fc" id="L64">        return fineRepository.sumUnpaidFines(userId)</span>
+<span class="fc" id="L65">                .orElse(BigDecimal.ZERO);</span>
+    }
+
+    private FineResponse toResponse(Fine f) {
+<span class="fc" id="L69">        return FineResponse.builder()</span>
+<span class="fc" id="L70">                .id(f.getId())</span>
+<span class="fc" id="L71">                .userId(f.getUser().getId())</span>
+<span class="fc" id="L72">                .userName(f.getUser().getName())</span>
+<span class="fc" id="L73">                .checkoutId(f.getCheckout().getId())</span>
+<span class="fc" id="L74">                .amount(f.getAmount())</span>
+<span class="fc" id="L75">                .issuedDate(f.getIssuedDate())</span>
+<span class="fc" id="L76">                .paidDate(f.getPaidDate())</span>
+<span class="fc" id="L77">                .status(f.getStatus())</span>
+<span class="fc" id="L78">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

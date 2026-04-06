@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -80,10 +81,11 @@ class BookIntegrationTest {
 
     @Test
     void getAllBooks_returnsSeededBook() throws Exception {
+        // DataSeeder adds books on startup; verify our test book is present anywhere in the list
         mockMvc.perform(get("/api/books")
                         .header("Authorization", "Bearer " + patronToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title").value("Spring in Action"));
+                .andExpect(jsonPath("$[*].title", hasItem("Spring in Action")));
     }
 
     @Test
