@@ -13,6 +13,9 @@ A full-stack library management system built for WSU's Software Quality course. 
 - [System Requirements](#system-requirements)
 - [Project Structure](#project-structure)
 - [Quick Start (Docker)](#quick-start-docker)
+- [Contributing](#contributing)
+- [Code Coverage](#code-coverage)
+- [Troubleshooting](#troubleshooting)
 - [Local Development Setup](#local-development-setup)
   - [Backend](#backend)
   - [Frontend](#frontend)
@@ -277,3 +280,69 @@ cd "Librarian Assistant"
 - **Role-based access** — `LIBRARIAN` role gets full admin access; `PATRON` role is scoped to self-service operations. Enforced in `SecurityConfig` and individual controller methods.
 - **H2 for tests** — Integration tests run against an in-memory H2 database using `@SpringBootTest`, so no external database setup is needed for CI or local testing.
 - **DataSeeder** — Seeds demo users and books on first startup so the system is usable immediately after installation without any manual setup.
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines. Quick reference:
+
+| Convention | Rule |
+|---|---|
+| Branch names | `feature/<issue-number>-short-desc`, `fix/<issue-number>-short-desc`, `test/<issue-number>-short-desc` |
+| Commit format | `type(#issue): short description` — types: `feat`, `fix`, `test`, `docs`, `refactor`, `chore` |
+| Before opening a PR | Run `./gradlew test jacocoTestCoverageVerification` — all tests must pass and coverage must be ≥ 80% |
+| PR size | Keep PRs focused; one logical change per PR |
+
+---
+
+## Code Coverage
+
+JaCoCo is configured to enforce **≥ 80% line coverage** across service and controller classes (models and DTOs are excluded).
+
+```bash
+# Run tests + generate HTML report
+./gradlew test jacocoTestReport
+# Open: Librarian Assistant/build/reports/jacoco/test/html/index.html
+
+# Verify the threshold (fails the build if coverage drops below 80%)
+./gradlew jacocoTestCoverageVerification
+
+# Run SonarQube analysis (requires a running SonarQube server)
+./gradlew sonarqube
+```
+
+---
+
+## Troubleshooting
+
+**Port 8081 already in use**
+```bash
+# Find and kill the process using port 8081
+lsof -ti:8081 | xargs kill -9
+```
+
+**PostgreSQL not starting (Docker)**
+```bash
+# Check container logs
+docker-compose logs postgres
+# Remove existing volume and recreate
+docker-compose down -v && docker-compose up
+```
+
+**`DATASOURCE_URL` / connection refused on local dev**
+- Ensure Docker is running: `docker-compose up postgres`
+- Default connection: `jdbc:postgresql://localhost:5434/librarydb`
+- Credentials: `libraryuser` / `library123`
+
+**JWT `401 Unauthorized` on all requests**
+- Check that the `Authorization` header is `Bearer <token>` (note the space after `Bearer`)
+- Tokens expire after 24 hours (`app.jwt.expiration-ms=86400000`); log in again to get a fresh token
+
+**`./gradlew test` fails with H2 schema errors**
+- H2 is configured in PostgreSQL compatibility mode; check `src/test/resources/application.properties`
+- Run `./gradlew clean test` to clear stale compiled classes
+
+**Frontend proxy not reaching backend**
+- Confirm backend is on port **8081** (not 8080); the Vite proxy config expects `localhost:8081`
+- Check `library-assistant-frontend/vite.config.ts` for the proxy target
