@@ -1,7 +1,14 @@
 # Load Testing – Librarian Assistant
 
-JMeter test plan targeting the checkout flow (login → checkout → return).  
-NFR target: p95 response time < 500 ms under 50 concurrent users.
+Two JMeter test plans are provided:
+
+| Plan | Scenario | Users | Target |
+|---|---|---|---|
+| `librarian-checkout-flow.jmx` | Checkout-only flow (login → checkout → return) | 50 | p95 < 500 ms |
+| `librarian-full-scenario.jmx` | Mixed workload covering all transaction types | 10 | p95 < 2 s (NFR-1) |
+
+Use **`librarian-full-scenario.jmx`** for NFR-1 compliance verification.  
+Use **`librarian-checkout-flow.jmx`** for targeted checkout-path profiling.
 
 ---
 
@@ -9,72 +16,94 @@ NFR target: p95 response time < 500 ms under 50 concurrent users.
 
 - [Apache JMeter](https://jmeter.apache.org/download_jmeter.cgi) 5.6+
 - Application running at `http://localhost:8081`
-- Default seeded librarian account: `librarian@library.com` / `password`
-- At least one book in the database with available copies
+- Default seeded accounts available:
+  - Patron: `patron@library.com` / `password`
+  - Librarian: `librarian@library.com` / `password`
+- At least one book in the database with `id=1` and available copies (seeded by DataSeeder on startup)
 
 ---
 
-## Running the Test
+## Running the Tests
 
-### CLI (non-GUI mode – recommended)
+### NFR-1 full mixed-scenario plan (recommended)
+
+```bash
+# 2-minute smoke run
+jmeter -n \
+  -t load-tests/librarian-full-scenario.jmx \
+  -l load-tests/results/full-scenario-results.jtl \
+  -e -o load-tests/results/full-report/
+
+# Full 2-hour endurance run — edit the plan's ThreadGroup.duration from 120 to 7200
+jmeter -n \
+  -Jduration=7200 \
+  -t load-tests/librarian-full-scenario.jmx \
+  -l load-tests/results/endurance-results.jtl \
+  -e -o load-tests/results/endurance-report/
+```
+
+### Checkout-flow plan
 
 ```bash
 jmeter -n \
   -t load-tests/librarian-checkout-flow.jmx \
-  -l load-tests/results.jtl \
-  -e -o load-tests/report/
+  -l load-tests/results/checkout-results.jtl \
+  -e -o load-tests/results/checkout-report/
 ```
 
-Open `load-tests/report/index.html` in a browser to view the HTML report.
-
-### GUI mode (for editing)
+### GUI mode (for editing plans)
 
 ```bash
-jmeter -t load-tests/librarian-checkout-flow.jmx
+jmeter -t load-tests/librarian-full-scenario.jmx
 ```
 
----
-
-## Test Plan Summary
-
-| Parameter | Value |
-|-----------|-------|
-| Virtual users (threads) | 50 |
-| Ramp-up period | 30 seconds |
-| Loop count | 3 |
-| Target host | `localhost:8081` |
-| Protocol | HTTP |
-
-### Steps per virtual user
-
-1. **POST** `/api/auth/login` — obtain JWT token
-2. **POST** `/api/books/search?query=test` — search books (read-only warm-up)
-3. **GET** `/api/checkouts/user/2` — list user checkouts
-4. **GET** `/api/reports/overdue` — fetch overdue report (LIBRARIAN)
+Open the HTML report: `load-tests/results/<report-dir>/index.html`
 
 ---
 
-## Pass Criteria
+## Mixed Scenario — Workload Distribution
 
-| Metric | Target |
-|--------|--------|
-| Error rate | < 1% |
-| p95 response time | < 500 ms |
-| Throughput | ≥ 20 req/s |
+The `librarian-full-scenario.jmx` models realistic library usage:
+
+| Transaction | Weight | Endpoint |
+|---|---|---|
+| Search Books | 40% | `GET /api/books/search?query=<keyword>` |
+| Get Book Detail | 15% | `GET /api/books/{id}` |
+| Checkout Book | 25% | `POST /api/checkouts` |
+| Return Book | 15% | `POST /api/checkouts/{id}/return` |
+| View My Checkouts | 5% | `GET /api/checkouts/user/{userId}` |
+
+A Gaussian think-time of 500–1500 ms is injected between requests to simulate real user pacing.
 
 ---
 
-## Interpreting Results
+## NFR-1 Acceptance Criteria
 
-JMeter produces a `results.jtl` file. The HTML report (`-e -o` flags) shows:
-- **Response Time Percentiles** – check p95 < 500 ms
-- **Throughput** – requests per second
-- **Error Rate** – should be < 1%
+| Metric | Target | How to verify |
+|---|---|---|
+| p95 response time | ≤ 2 000 ms | Aggregate Report → 95th Percentile column |
+| p99 response time | ≤ 5 000 ms | Aggregate Report → 99th Percentile column |
+| Error rate | < 1% | Summary Report → Error % column |
+| Throughput | ≥ 10 req/s sustained | Summary Report → Throughput column |
+| Endurance stability | No degradation over 2 hours | Compare p95 at t=10min vs t=120min |
 
-For CI integration, fail the build if `errorPct > 1` using:
+---
+
+## Interpreting HTML Reports
+
+After running with `-e -o <output-dir>`, open `<output-dir>/index.html`. Key sections:
+
+- **Statistics** — p50, p90, p95, p99 per endpoint
+- **Response Time Percentiles Over Time** — detect degradation during long runs
+- **Active Threads Over Time** — verify ramp-up behaviour
+- **Errors** — inspect any non-2xx responses
+
+---
+
+## Results Directory
+
+Results files are ignored by git (see `.gitignore`). Create the directory before running:
 
 ```bash
-jmeter-plugins-cmd --generate-png results.png \
-  --input-jtl load-tests/results.jtl \
-  --plugin-type TransactionsPerSecond
+mkdir -p load-tests/results
 ```
